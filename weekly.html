@@ -143,6 +143,41 @@
       // 출처
       document.getElementById('plan-source').textContent = `📚 ${plan.source}`;
     }
+
+    /** 식단 데이터에서 장보기 목록 자동 생성 */
+    function generateShoppingList(plan) {
+      const ingredientSet = new Set();
+
+      // 7일 식단에서 모든 식재료 ID 추출
+      plan.days.forEach(day => {
+        day.meals.forEach(meal => {
+          [meal.base, meal.side, meal.extra].forEach(id => {
+            if (id) ingredientSet.add(id);
+          });
+        });
+      });
+
+      // ID → 이름 변환 + 이모지
+      const autoList = [];
+      ingredientSet.forEach(id => {
+        const ing = App.getIngredient(id);
+        if (ing) autoList.push(`${ing.emoji} ${ing.name}`);
+      });
+
+      // 하드코딩 목록이 있으면 보완 (수량 정보 등)
+      if (plan.shopping && plan.shopping.length > 0) {
+        // 수량 정보가 있는 하드코딩 항목 추가 (중복 체크)
+        plan.shopping.forEach(item => {
+          const hasQuantity = /\d/.test(item);
+          if (hasQuantity) {
+            const alreadyInList = autoList.some(a => item.includes(a.replace(/[^\w가-힣]/g, '')));
+            if (!alreadyInList) autoList.push(item);
+          }
+        });
+      }
+
+      return autoList;
+    }
   </script>
 </body>
 </html>
