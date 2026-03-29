@@ -13,6 +13,6 @@ tmux has-session -t "$SESSION" 2>/dev/null && {
 
 # 새 tmux 세션 생성 + Claude Code 실행
 tmux new-session -d -s "$SESSION" -c "$WORKDIR"
-tmux send-keys -t "$SESSION" "claude --channels plugin:telegram@claude-plugins-official" Enter
+tmux send-keys -t "$SESSION" "claude --channels plugin:telegram@claude-plugins-official --dangerously-skip-permissions" Enter
 
 echo "[$SESSION] 봇 시작됨 — tmux attach -t $SESSION 으로 확인"
