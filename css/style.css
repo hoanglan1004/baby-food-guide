@@ -404,7 +404,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .calendar-grid .day-header {
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   padding: 4px 0;
   font-weight: 600;
@@ -417,7 +417,7 @@ a { color: var(--primary-dark); text-decoration: none; }
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   position: relative;
 }
