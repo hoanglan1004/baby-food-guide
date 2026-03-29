@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <title>레시피 — 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div id="app-screen">
+    <header class="header">
+      <h1>🍳 이유식 레시피</h1>
+      <div class="subtitle" id="recipe-subtitle">단계별 대표 레시피</div>
+    </header>
+
+    <main class="content">
+      <!-- 단계 필터 -->
+      <div class="category-filter" id="stage-filter"></div>
+
+      <!-- 레시피 목록 -->
+      <div id="recipe-list"></div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>홈</a>
+      <a href="weekly.html" class="nav-item"><span class="nav-icon">📅</span>식단</a>
+      <a href="ingredients.html" class="nav-item"><span class="nav-icon">🥕</span>식재료</a>
+      <a href="journal.html" class="nav-item"><span class="nav-icon">📝</span>일지</a>
+      <a href="guide.html" class="nav-item"><span class="nav-icon">📖</span>가이드</a>
+    </nav>
+  </div>
+
+  <!-- 레시피 상세 패널 -->
+  <div id="detail-panel" class="detail-panel hidden" onclick="closeDetail(event)">
+    <div class="detail-content" id="detail-content"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentStageFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      const s = App.getSettings();
+      const monthAge = App.getMonthAge(s.babyBirthday);
+      const stage = App.getCurrentStage(monthAge);
+      document.getElementById('recipe-subtitle').textContent =
+        `${STAGES[stage].label} 기준 · ${RECIPES.length}개 레시피`;
+      renderFilters();
+      renderRecipes();
+    });
+
+    function renderFilters() {
+      const el = document.getElementById('stage-filter');
+      const stages = [
+        { key: 'all', name: '전체', emoji: '🍽️' },
+        { key: 'initial', name: '초기(6m)', emoji: '🟢' },
+        { key: 'middle', name: '중기(7-8m)', emoji: '🟠' },
+        { key: 'late', name: '후기(9-11m)', emoji: '🔴' }
+      ];
+      el.innerHTML = stages.map(s =>
+        `<button class="filter-btn ${s.key === currentStageFilter ? 'active' : ''}" onclick="setStageFilter('${s.key}')">${s.emoji} ${s.name}</button>`
+      ).join('');
+    }
+
+    function setStageFilter(stage) {
+      currentStageFilter = stage;
+      renderFilters();
+      renderRecipes();
+    }
+
+    function renderRecipes() {
+      const el = document.getElementById('recipe-list');
+      const filtered = currentStageFilter === 'all'
+        ? RECIPES
+        : RECIPES.filter(r => r.stage === currentStageFilter);
+
+      if (filtered.length === 0) {
+        el.innerHTML = '<div class="card" style="text-align:center; padding:40px;"><p>해당 단계의 레시피가 없어요</p></div>';
+        return;
+      }
+
+      el.innerHTML = filtered.map(recipe => {
+        const stageInfo = STAGES[recipe.stage];
+        const catLabel = { base: '기본죽', side: '반찬', protein: '단백질', main: '한 그릇', snack: '간식' };
+        return `
+          <div class="card" style="cursor:pointer; border-left:4px solid ${stageInfo.color};" onclick="showRecipe('${recipe.id}')">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-size:1.1rem; font-weight:700;">${recipe.emoji} ${recipe.name}</div>
+                <div style="font-size:0.75rem; color:var(--text-light); margin-top:4px;">
+                  <span style="background:${stageInfo.color}; padding:2px 8px; border-radius:8px; font-size:0.65rem;">${stageInfo.name}</span>
+                  <span style="margin-left:6px;">${catLabel[recipe.category] || ''}</span>
+                </div>
+              </div>
+              <div style="font-size:1.5rem;">→</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showRecipe(id) {
+      const recipe = RECIPES.find(r => r.id === id);
+      if (!recipe) return;
+
+      const panel = document.getElementById('detail-panel');
+      const content = document.getElementById('detail-content');
+      const stageInfo = STAGES[recipe.stage];
+
+      content.innerHTML = `
+        <div class="detail-close"></div>
+        <div style="text-align:center; margin-bottom:16px;">
+          <div style="font-size:3rem;">${recipe.emoji}</div>
+          <h2 style="font-size:1.3rem; margin:8px 0;">${recipe.name}</h2>
+          <span style="background:${stageInfo.color}; padding:4px 12px; border-radius:12px; font-size:0.75rem;">${stageInfo.label}</span>
+        </div>
+
+        <div class="card" style="padding:14px; background:var(--bg);">
+          <div style="font-size:0.85rem; font-weight:600; margin-bottom:8px;">📋 재료</div>
+          ${recipe.ingredients.map(i => `<div style="font-size:0.85rem; padding:3px 0;">• ${i}</div>`).join('')}
+        </div>
+
+        <div class="card" style="padding:14px;">
+          <div style="font-size:0.85rem; font-weight:600; margin-bottom:12px;">👩‍🍳 조리 순서</div>
+          ${recipe.steps.map((step, i) => `
+            <div style="display:flex; gap:10px; padding:10px 0; ${i < recipe.steps.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-light); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">${step.icon}</div>
+              <div style="font-size:0.85rem; padding-top:6px;">${step.text}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="background:#E8F5E9; border-radius:var(--radius-sm); padding:12px; margin-top:12px;">
+          <div style="font-size:0.85rem; font-weight:600;">💡 팁</div>
+          <div style="font-size:0.8rem; color:var(--text-light); margin-top:4px;">${recipe.tip}</div>
+        </div>
+
+        <div class="source-badge mt-8">📚 ${recipe.source}</div>
+      `;
+
+      panel.classList.remove('hidden');
+    }
+
+    function closeDetail(e) {
+      if (e.target === document.getElementById('detail-panel')) {
+        document.getElementById('detail-panel').classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
