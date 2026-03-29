@@ -374,6 +374,130 @@ const INGREDIENTS = [
     },
     tip: '나트륨 낮은 모차렐라, 리코타 추천',
     source: '대한소아청소년과학회'
+  },
+
+  // ── 중기 추가 식재료 (NotebookLM 소스 검증) ──
+  {
+    id: 'lentil', name: '렌틸콩', emoji: '🫘',
+    category: 'protein', colorGroup: 'red',
+    startMonth: 7, allergyRisk: 'none',
+    nutrients: ['iron', 'protein', 'fiber'],
+    stages: {
+      middle:  { form: '푹 삶아 으깬 것', amount: '15~20g' },
+      late:    { form: '잘게 으깬 것', amount: '20~30g' }
+    },
+    tip: '식물성 철분+단백질 동시 보충. 비타민C와 함께 먹으면 흡수율 UP',
+    source: 'NotebookLM 소스 — 소아과 전문의 정유미'
+  },
+  {
+    id: 'mushroom', name: '표고버섯', emoji: '🍄',
+    category: 'vegetable', colorGroup: 'white',
+    startMonth: 7, allergyRisk: 'none',
+    nutrients: ['vitaminD', 'fiber'],
+    stages: {
+      middle:  { form: '곱게 다진 것', amount: '10~15g' },
+      late:    { form: '잘게 다진 것', amount: '15~20g' }
+    },
+    tip: '비타민D 함유. 감칠맛이 있어 아기가 좋아함',
+    source: 'NotebookLM 소스 — 대한소아청소년과학회'
+  },
+  {
+    id: 'pea', name: '완두콩', emoji: '🟢',
+    category: 'vegetable', colorGroup: 'green',
+    startMonth: 7, allergyRisk: 'none',
+    nutrients: ['protein', 'fiber', 'iron'],
+    stages: {
+      middle:  { form: '껍질 벗겨 으깬 것', amount: '15~20g' },
+      late:    { form: '으깬 것', amount: '20~30g' }
+    },
+    tip: '단백질+식이섬유 풍부. 껍질은 벗겨서 주기',
+    source: 'NotebookLM 소스 — 소아과 전문의'
+  },
+  {
+    id: 'egg_white', name: '달걀흰자(완전)', emoji: '🥚',
+    category: 'protein', colorGroup: 'white',
+    startMonth: 8, allergyRisk: 'medium',
+    allergyNote: '노른자 안전 확인 후 전란 시도. LEAP 연구 기반 조기 도입 권장',
+    nutrients: ['protein'],
+    stages: {
+      middle:  { form: '완숙 전란 잘게 으깬 것', amount: '1/2개' },
+      late:    { form: '완숙 전란', amount: '1개' }
+    },
+    tip: '노른자를 안전하게 먹은 후 흰자 포함 전란으로 확대',
+    source: 'NotebookLM 소스 — AAP & LEAP Study'
+  },
+
+  // ── 후기 추가 식재료 (NotebookLM 소스 검증) ──
+  {
+    id: 'pork', name: '돼지고기', emoji: '🥓',
+    category: 'protein', colorGroup: 'red',
+    startMonth: 9, allergyRisk: 'none',
+    nutrients: ['protein', 'iron', 'zinc'],
+    stages: {
+      late:    { form: '잘게 다진 것', amount: '20~30g' },
+      complete: { form: '작은 덩어리', amount: '적정량' }
+    },
+    tip: '지방이 적은 안심/등심 부위 사용. 비타민B1 풍부',
+    source: 'NotebookLM 소스 — 소아과 전문의'
+  },
+  {
+    id: 'salmon', name: '연어', emoji: '🐟',
+    category: 'protein', colorGroup: 'red',
+    startMonth: 9, allergyRisk: 'low',
+    nutrients: ['protein', 'fat'],
+    stages: {
+      late:    { form: '삶아서 잘게 으깬 것', amount: '15~20g' },
+      complete: { form: '작은 덩어리', amount: '적정량' }
+    },
+    tip: '오메가-3(DHA) 풍부 → 두뇌 발달에 좋음. 가시 제거 필수',
+    source: 'NotebookLM 소스 — 소아과 전문의 정유미'
+  },
+  {
+    id: 'shrimp', name: '새우', emoji: '🦐',
+    category: 'protein', colorGroup: 'red',
+    startMonth: 9, allergyRisk: 'high',
+    allergyNote: '갑각류 알레르기 주의. 반드시 소량부터 3일 관찰',
+    nutrients: ['protein', 'zinc'],
+    stages: {
+      late:    { form: '곱게 다진 것', amount: '10~15g' }
+    },
+    tip: '갑각류는 알레르기 위험 높음. 소량 시도 후 3~5일 관찰',
+    source: 'NotebookLM 소스 — AAP'
+  },
+  {
+    id: 'pasta', name: '파스타면', emoji: '🍝',
+    category: 'grain', colorGroup: 'yellow',
+    startMonth: 9, allergyRisk: 'low',
+    allergyNote: '밀 알레르기 확인 후 시도',
+    nutrients: ['carbs', 'protein'],
+    stages: {
+      late:    { form: '잘게 자른 것 (1cm)', amount: '적정량' },
+      complete: { form: '유아용 파스타', amount: '적정량' }
+    },
+    tip: '밀을 이미 안전하게 먹었다면 시도. 소금 없이 삶기',
+    source: 'NotebookLM 소스 — 소아과 전문의'
+  },
+  {
+    id: 'grape', name: '포도', emoji: '🍇',
+    category: 'fruit', colorGroup: 'purple',
+    startMonth: 9, allergyRisk: 'none',
+    nutrients: ['vitaminC', 'fiber'],
+    stages: {
+      late:    { form: '껍질+씨 제거, 세로 4등분', amount: '적정량' }
+    },
+    tip: '⚠️ 질식 위험! 반드시 세로로 4등분. 통째 절대 금지',
+    source: 'NotebookLM 소스 — 질식 위험 식품 가이드'
+  },
+  {
+    id: 'blueberry', name: '블루베리', emoji: '🫐',
+    category: 'fruit', colorGroup: 'purple',
+    startMonth: 9, allergyRisk: 'none',
+    nutrients: ['vitaminC', 'fiber'],
+    stages: {
+      late:    { form: '으깨거나 반으로 자른 것', amount: '적정량' }
+    },
+    tip: '안토시아닌 풍부. 보라색 영양소 대표. 으깨서 주기',
+    source: 'WHO'
   }
 ];
 
