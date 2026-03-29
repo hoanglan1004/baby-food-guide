@@ -804,3 +804,136 @@ const FORBIDDEN_FOODS = [
   { name: '꿀/물엿', emoji: '🍬', reason: '단맛 중독 → 편식 유발', untilMonth: 24 },
   { name: '통 견과류', emoji: '🥜', reason: '질식 위험 — 반드시 갈아서', untilMonth: 36 }
 ];
+
+// ─── 레시피 데이터 ──────────────────────────────────
+const RECIPES = [
+  // ── 초기 (6개월) ──
+  {
+    id: 'rice_porridge', name: '쌀 미음 (10배죽)', emoji: '🍚',
+    stage: 'initial', category: 'base',
+    ingredients: ['쌀가루 1큰술 (또는 불린 쌀 15g)', '물 150ml'],
+    steps: [
+      { text: '쌀을 30분 이상 불린다 (쌀가루면 생략)', icon: '💧' },
+      { text: '불린 쌀을 믹서에 곱게 간다', icon: '🔄' },
+      { text: '냄비에 간 쌀 + 물 넣고 약불에서 저어가며 끓인다', icon: '🔥' },
+      { text: '10분 정도 걸쭉해지면 체에 한 번 거른다', icon: '🥣' },
+      { text: '미지근하게 식혀서 먹인다', icon: '✅' }
+    ],
+    tip: '처음엔 묽게, 점점 되직하게 농도 조절',
+    source: '대한소아청소년과학회'
+  },
+  {
+    id: 'veggie_puree', name: '채소 퓨레 (애호박/당근/고구마)', emoji: '🥕',
+    stage: 'initial', category: 'side',
+    ingredients: ['채소 30g (애호박, 당근, 또는 고구마)', '물 적당량'],
+    steps: [
+      { text: '채소를 깨끗이 씻어 껍질을 벗긴다', icon: '🧹' },
+      { text: '작게 잘라 푹 익힌다 (찌거나 삶기)', icon: '🔥' },
+      { text: '익은 채소를 믹서나 절구에 곱게 간다', icon: '🔄' },
+      { text: '삶은 물을 조금 넣어 농도를 조절한다', icon: '💧' },
+      { text: '미음에 1숟가락씩 섞어 먹인다', icon: '🥣' }
+    ],
+    tip: '채소마다 따로 만들어 냉동 보관하면 편해요 (1주일분)',
+    source: 'WHO'
+  },
+  {
+    id: 'beef_puree', name: '소고기 퓨레', emoji: '🥩',
+    stage: 'initial', category: 'protein',
+    ingredients: ['소고기(안심/사태) 30g', '물 적당량'],
+    steps: [
+      { text: '소고기 핏물을 빼고 (30분 찬물 담그기)', icon: '💧' },
+      { text: '냄비에 물 넣고 푹 삶는다 (20분 이상)', icon: '🔥' },
+      { text: '삶은 고기를 믹서에 곱게 간다', icon: '🔄' },
+      { text: '육수를 넣어 걸쭉한 퓨레로 만든다', icon: '🥣' },
+      { text: '미음에 1숟가락씩 섞어 먹인다', icon: '✅' }
+    ],
+    tip: '육수는 다른 죽에도 활용 가능. 한번에 여러 끼 만들어 냉동',
+    source: 'AAP — 6개월부터 철분 보충 필수'
+  },
+
+  // ── 중기 (7-8개월) ──
+  {
+    id: 'veggie_beef_porridge', name: '소고기 채소 죽', emoji: '🥩',
+    stage: 'middle', category: 'main',
+    ingredients: ['쌀 30g', '소고기 다진 것 20g', '당근 15g', '애호박 15g', '물 200ml'],
+    steps: [
+      { text: '쌀을 30분 불린다', icon: '💧' },
+      { text: '소고기, 당근, 애호박을 3mm로 잘게 다진다', icon: '🔪' },
+      { text: '냄비에 참기름 살짝 두르고 소고기를 볶는다', icon: '🔥' },
+      { text: '쌀과 채소, 물을 넣고 약불에서 20분 끓인다', icon: '🫕' },
+      { text: '걸쭉해지면 완성! 식혀서 먹인다', icon: '✅' }
+    ],
+    tip: '참기름을 살짝 넣으면 고소하고 철분 흡수도 도움',
+    source: '대한소아청소년과학회'
+  },
+  {
+    id: 'fish_broccoli', name: '흰살생선 브로콜리 죽', emoji: '🐟',
+    stage: 'middle', category: 'main',
+    ingredients: ['쌀 30g', '대구살 15g', '브로콜리 꽃 부분 15g', '물 200ml'],
+    steps: [
+      { text: '대구를 삶아 뼈와 가시를 완벽히 제거한다', icon: '🐟' },
+      { text: '브로콜리 꽃 부분만 데쳐 잘게 다진다', icon: '🥦' },
+      { text: '불린 쌀과 물을 넣고 죽을 끓인다', icon: '🔥' },
+      { text: '다진 생선과 브로콜리를 넣고 5분 더 끓인다', icon: '🫕' },
+      { text: '잘 저어 완성', icon: '✅' }
+    ],
+    tip: '비타민C(브로콜리)가 철분 흡수를 도와줘요',
+    source: 'NotebookLM 소스'
+  },
+  {
+    id: 'tofu_spinach', name: '두부 시금치 죽', emoji: '🧈',
+    stage: 'middle', category: 'main',
+    ingredients: ['쌀 30g', '두부 25g', '시금치 15g', '물 200ml'],
+    steps: [
+      { text: '시금치를 끓는 물에 데쳐 옥살산을 제거한다', icon: '🥬' },
+      { text: '데친 시금치를 잘게 다진다', icon: '🔪' },
+      { text: '두부를 으깬다', icon: '🧈' },
+      { text: '불린 쌀과 물로 죽을 끓인다', icon: '🔥' },
+      { text: '두부와 시금치를 넣고 5분 더 끓인다', icon: '✅' }
+    ],
+    tip: '시금치는 반드시 데쳐서! 옥살산이 칼슘 흡수를 방해해요',
+    source: '대한소아청소년과학회'
+  },
+
+  // ── 후기 (9-11개월) ──
+  {
+    id: 'salmon_veggie_rice', name: '연어 채소 진밥', emoji: '🐟',
+    stage: 'late', category: 'main',
+    ingredients: ['밥 100g', '연어 20g', '브로콜리 15g', '당근 15g'],
+    steps: [
+      { text: '연어를 삶아 뼈를 제거하고 5mm로 으깬다', icon: '🐟' },
+      { text: '브로콜리, 당근을 5mm로 잘게 썬다', icon: '🔪' },
+      { text: '채소를 먼저 익힌다 (찌거나 볶기)', icon: '🔥' },
+      { text: '진밥에 연어와 채소를 섞는다', icon: '🍚' },
+      { text: '잘 섞어 완성', icon: '✅' }
+    ],
+    tip: '오메가3(DHA)가 두뇌 발달에 좋아요',
+    source: 'NotebookLM 소스'
+  },
+  {
+    id: 'pork_mushroom', name: '돼지고기 버섯 진밥', emoji: '🥓',
+    stage: 'late', category: 'main',
+    ingredients: ['밥 100g', '돼지고기(안심) 25g', '표고버섯 15g', '양배추 15g'],
+    steps: [
+      { text: '돼지고기를 5mm로 다진다', icon: '🔪' },
+      { text: '버섯, 양배추를 5mm로 다진다', icon: '🍄' },
+      { text: '팬에 기름 살짝, 고기를 먼저 볶는다', icon: '🔥' },
+      { text: '채소를 넣고 함께 볶는다', icon: '🫕' },
+      { text: '진밥과 섞어 완성', icon: '✅' }
+    ],
+    tip: '비타민B1(돼지고기) + 비타민D(버섯) 조합',
+    source: '대한소아청소년과학회'
+  },
+  {
+    id: 'finger_food_banana', name: '바나나 핑거푸드', emoji: '🍌',
+    stage: 'late', category: 'snack',
+    ingredients: ['바나나 1/2개'],
+    steps: [
+      { text: '바나나를 세로로 길게 자른다 (아기 손에 잡히는 크기)', icon: '🔪' },
+      { text: '아기 앞에 놓아 스스로 잡게 한다', icon: '👶' },
+      { text: '아기가 스스로 먹는 것을 지켜본다', icon: '👀' }
+    ],
+    tip: '핑거푸드는 소근육 발달 + 자기주도 식사 연습. 항상 옆에서 지켜보세요!',
+    source: 'NotebookLM 소스 — BLW(아기주도이유식) 가이드'
+  }
+];
