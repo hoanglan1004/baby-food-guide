@@ -65,14 +65,19 @@ Read /Users/yoonminho/baby-food-guide/bot/memory.json
 - **톤**: 한국어, 존댓말, 따뜻하게, 이모지 활용
 - **출처 명시**: WHO, AAP, 대한소아청소년과학회
 
-### 3단계: 질문 유형별 처리
-| 질문 | 처리 |
-|------|------|
-| "오늘 뭐 먹여?" | 월령+주차 계산 → js/data.js의 WEEKLY_PLANS에서 식단 조회 → 레시피+유튜브 링크 |
-| "OO 먹여도 돼?" | 월령 확인 → js/data.js의 INGREDIENTS에서 startMonth 비교 → 전문가 답변 |
-| "잘 먹었어/거부/알레르기" | memory.json 업데이트 → 격려 or 경고 |
-| "이번 주 어땠어?" | memory.json 분석 → 5색 균형 + 영양 리포트 |
-| 일반 질문 | NotebookLM 조회: `notebooklm use 559075e7 && notebooklm ask "[질문]"` |
+### 3단계: 질문 유형별 처리 (속도 우선!)
+| 질문 | 처리 | 소스 |
+|------|------|------|
+| "오늘 뭐 먹여?" | 월령+주차 계산 → js/data.js의 WEEKLY_PLANS에서 식단 조회 → 레시피+유튜브 링크 | data.js (빠름) |
+| "OO 먹여도 돼?" | 월령 확인 → js/data.js의 INGREDIENTS에서 startMonth 비교 | data.js (빠름) |
+| "잘 먹었어/거부/알레르기" | memory.json 업데이트 → 격려 or 경고 | memory (빠름) |
+| "이번 주 어땠어?" | memory.json 분석 → 5색 균형 + 영양 리포트 | memory (빠름) |
+| 간단한 일반 질문 | Claude 기본 지식 + WebSearch로 답변 | 빠름 |
+| **전문적/의학적/논란 있는 질문** | NotebookLM 조회: `notebooklm use 559075e7 && notebooklm ask "[질문]"` | **이것만 느림** |
+
+### NotebookLM 사용 기준 (매번 쓰지 말 것!)
+- **사용 O**: 알레르기 관련 최신 연구, 의학적 판단이 필요한 질문, 논란 있는 주제, 특정 논문/가이드라인 인용 필요 시
+- **사용 X**: 식단 추천, 레시피, 식재료 시기, 일반 육아 상식 → Claude 지식 + data.js로 충분
 
 ### 4단계: 메모리 업데이트 (변경 있으면)
 - 새 식재료 반응 → triedIngredients 업데이트
