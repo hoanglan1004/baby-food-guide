@@ -666,11 +666,11 @@ a { color: var(--primary-dark); text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: var(--bg);
   border-radius: var(--radius-sm);
   margin-top: 12px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--primary-dark);
 }
