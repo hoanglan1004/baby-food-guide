@@ -454,8 +454,8 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .journal-entry .entry-info { flex: 1; }
-.journal-entry .entry-name { font-size: 0.9rem; font-weight: 600; }
-.journal-entry .entry-amount { font-size: 0.75rem; color: var(--text-light); }
+.journal-entry .entry-name { font-size: 0.95rem; font-weight: 600; }
+.journal-entry .entry-amount { font-size: 0.82rem; color: var(--text-light); }
 
 /* ─── 농도 가이드 ─── */
 .texture-guide {
