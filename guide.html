@@ -416,37 +416,36 @@
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
-    // ─── 슬라이드 갤러리 ──────────────────
-    const TOTAL_SLIDES = 17;
-    let currentSlide = 1;
+    // ─── 범용 슬라이드 네비게이션 ──────────────────
+    function slideNav(btn, dir) {
+      const section = btn.closest('.slide-section');
+      const count = parseInt(section.dataset.count);
+      let current = parseInt(section.dataset.current);
+      const folder = section.dataset.folder;
 
-    function updateSlide() {
-      const num = String(currentSlide).padStart(2, '0');
-      document.getElementById('slide-img').src = `assets/slides/slide-${num}.jpg`;
-      document.getElementById('slide-counter').textContent = `${currentSlide} / ${TOTAL_SLIDES}`;
+      current += dir;
+      if (current < 1) current = count;
+      if (current > count) current = 1;
+      section.dataset.current = current;
+
+      const num = String(current).padStart(2, '0');
+      section.querySelector('.slide-img').src = `assets/${folder}/slide-${num}.jpg`;
+      section.querySelector('.slide-counter').textContent = `${current} / ${count}`;
     }
 
-    function nextSlide() {
-      currentSlide = currentSlide >= TOTAL_SLIDES ? 1 : currentSlide + 1;
-      updateSlide();
-    }
-
-    function prevSlide() {
-      currentSlide = currentSlide <= 1 ? TOTAL_SLIDES : currentSlide - 1;
-      updateSlide();
-    }
-
-    // 스와이프 지원
-    let touchStartX = 0;
+    // 스와이프 지원 (모든 슬라이드 섹션)
     document.addEventListener('DOMContentLoaded', () => {
-      const gallery = document.getElementById('slide-gallery');
-      if (gallery) {
-        gallery.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-        gallery.addEventListener('touchend', e => {
-          const diff = touchStartX - e.changedTouches[0].clientX;
-          if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+      document.querySelectorAll('.slide-section').forEach(section => {
+        let startX = 0;
+        section.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+        section.addEventListener('touchend', e => {
+          const diff = startX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50) {
+            const btn = section.querySelector('button');
+            slideNav(btn, diff > 0 ? 1 : -1);
+          }
         });
-      }
+      });
     });
 
     document.addEventListener('DOMContentLoaded', () => {
