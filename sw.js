@@ -1,9 +1,9 @@
 /**
  * Service Worker — 오프라인 캐싱
- * 모든 페이지와 리소스를 캐싱해서 인터넷 없이도 100% 동작
+ * 네트워크 우선, 오프라인 시 캐시 사용
  */
 
-const CACHE_NAME = 'babyfood-v1';
+const CACHE_NAME = 'babyfood-v2';
 const CACHE_FILES = [
   './',
   './index.html',
@@ -14,7 +14,8 @@ const CACHE_FILES = [
   './css/style.css',
   './js/data.js',
   './js/app.js',
-  './manifest.json'
+  './manifest.json',
+  './assets/audio-overview.mp3'
 ];
 
 // 설치: 모든 파일 캐싱
@@ -37,11 +38,16 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// 요청: 캐시 우선, 없으면 네트워크
+// 요청: 네트워크 우선, 실패 시 캐시
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request))
-      .catch(() => caches.match('./index.html'))
+    fetch(event.request)
+      .then(response => {
+        // 네트워크 성공 → 캐시 업데이트
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
