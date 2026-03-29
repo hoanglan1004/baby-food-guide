@@ -731,7 +731,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .nutrition-bar .label {
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   min-width: 60px;
   display: flex;
   align-items: center;
