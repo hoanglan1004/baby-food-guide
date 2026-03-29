@@ -122,7 +122,7 @@ a { color: var(--primary-dark); text-decoration: none; }
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
