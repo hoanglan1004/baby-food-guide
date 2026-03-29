@@ -79,7 +79,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .header h1 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .header .subtitle {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--text-light);
   margin-top: 2px;
 }
