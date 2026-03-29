@@ -239,6 +239,39 @@
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
+    // ─── 슬라이드 갤러리 ──────────────────
+    const TOTAL_SLIDES = 17;
+    let currentSlide = 1;
+
+    function updateSlide() {
+      const num = String(currentSlide).padStart(2, '0');
+      document.getElementById('slide-img').src = `assets/slides/slide-${num}.jpg`;
+      document.getElementById('slide-counter').textContent = `${currentSlide} / ${TOTAL_SLIDES}`;
+    }
+
+    function nextSlide() {
+      currentSlide = currentSlide >= TOTAL_SLIDES ? 1 : currentSlide + 1;
+      updateSlide();
+    }
+
+    function prevSlide() {
+      currentSlide = currentSlide <= 1 ? TOTAL_SLIDES : currentSlide - 1;
+      updateSlide();
+    }
+
+    // 스와이프 지원
+    let touchStartX = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+      const gallery = document.getElementById('slide-gallery');
+      if (gallery) {
+        gallery.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+        gallery.addEventListener('touchend', e => {
+          const diff = touchStartX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+        });
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       if (!App.isSetupDone()) { location.href = 'index.html'; return; }
       const s = App.getSettings();
