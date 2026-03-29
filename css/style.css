@@ -510,16 +510,16 @@ a { color: var(--primary-dark); text-decoration: none; }
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   transition: all 0.2s;
-  min-width: 56px;
+  min-width: 60px;
 }
 
-.nav-item .nav-icon { font-size: 1.4rem; }
+.nav-item .nav-icon { font-size: 1.5rem; }
 .nav-item.active { color: var(--primary-dark); font-weight: 700; }
 
 /* ─── 출처 뱃지 ─── */
