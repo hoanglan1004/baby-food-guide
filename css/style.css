@@ -719,8 +719,8 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .schedule-item:last-child { border-bottom: none; }
-.schedule-time { font-size: 0.8rem; color: var(--text-muted); min-width: 52px; }
-.schedule-content { font-size: 0.9rem; }
+.schedule-time { font-size: 0.85rem; color: var(--text-muted); min-width: 52px; }
+.schedule-content { font-size: 0.95rem; }
 
 /* ─── 영양 균형 차트 ─── */
 .nutrition-bar {
