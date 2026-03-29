@@ -557,7 +557,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 
 .allergy-warning h3 {
   color: var(--allergy);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-bottom: 8px;
 }
 
