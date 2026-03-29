@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-29",
+
+  "profile": {
+    "babyName": "하윤이",
+    "birthday": "2025-10-06",
+    "startDate": null,
+    "parentName": "홍란",
+    "parentTelegramId": null,
+    "notes": "첫째 아기. 부모 모두 이유식 처음."
+  },
+
+  "growth": {
+    "triedIngredients": {},
+    "allergyAlerts": [],
+    "preferences": {
+      "loves": [],
+      "dislikes": [],
+      "neutral": []
+    },
+    "milestones": [],
+    "currentWeek": 0
+  },
+
+  "recommendations": {
+    "history": [],
+    "patterns": {
+      "bestMealTime": null,
+      "prefersWarm": null,
+      "sweetPreference": null
+    }
+  },
+
+  "selfReview": {
+    "lastReview": null,
+    "totalRecommendations": 0,
+    "correctRecommendations": 0,
+    "accuracy": 0,
+    "improvements": [],
+    "mistakes": [],
+    "lessonsLearned": []
+  },
+
+  "dailyLog": {}
+}
