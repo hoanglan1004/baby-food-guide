@@ -43,7 +43,7 @@
 
   "selfReview": {
     "lastReview": null,
-    "totalRecommendations": 0,
+    "totalRecommendations": 1,
     "correctRecommendations": 0,
     "accuracy": 0,
     "improvements": [],
