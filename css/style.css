@@ -250,7 +250,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .weekly-day .day-label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   min-width: 28px;
   text-align: center;
@@ -258,12 +258,12 @@ a { color: var(--primary-dark); text-decoration: none; }
 
 .weekly-day .day-meal {
   flex: 1;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .weekly-day .day-badge {
-  font-size: 0.7rem;
-  padding: 3px 8px;
+  font-size: 0.78rem;
+  padding: 4px 10px;
   border-radius: 12px;
   font-weight: 600;
   white-space: nowrap;
