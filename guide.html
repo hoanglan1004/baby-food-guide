@@ -24,6 +24,33 @@
         <div id="stage-info"></div>
       </div>
 
+      <!-- 전문가 슬라이드 (NotebookLM) -->
+      <div class="card">
+        <div class="card-title">📊 전문가 이유식 가이드 슬라이드</div>
+        <div class="card-subtitle">WHO, AAP, 대한소아청소년과학회 최신 지침 종합 (NotebookLM 생성)</div>
+        <div id="slide-gallery" style="position:relative; overflow:hidden; border-radius:var(--radius-sm);">
+          <img id="slide-img" src="assets/slides/slide-01.jpg" alt="이유식 가이드 슬라이드"
+               style="width:100%; display:block; border-radius:var(--radius-sm);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <button onclick="prevSlide()" style="padding:10px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); font-size:1rem; cursor:pointer;">◀</button>
+            <span id="slide-counter" style="font-size:0.8rem; color:var(--text-light);">1 / 17</span>
+            <button onclick="nextSlide()" style="padding:10px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); font-size:1rem; cursor:pointer;">▶</button>
+          </div>
+        </div>
+        <div class="source-badge mt-8">📚 NotebookLM × 소아과 전문의 (정유미, 하정훈) 소스 기반</div>
+      </div>
+
+      <!-- 오디오 가이드 (NotebookLM) -->
+      <div class="card">
+        <div class="card-title">🎧 이유식 오디오 가이드</div>
+        <div class="card-subtitle">"6개월 철분 절벽과 땅콩 알레르기의 반전" — 들으면서 이유식 준비하세요</div>
+        <audio controls style="width:100%; margin-top:8px;" preload="none">
+          <source src="assets/audio-overview.mp3" type="audio/mpeg">
+          브라우저가 오디오를 지원하지 않습니다.
+        </audio>
+        <div class="source-badge mt-8">🎧 NotebookLM Audio Overview — 전문가 소스 기반 AI 생성</div>
+      </div>
+
       <!-- 농도 가이드 -->
       <div class="card">
         <div class="card-title">🥣 농도 가이드</div>
