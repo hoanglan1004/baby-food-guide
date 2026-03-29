@@ -1,0 +1,753 @@
+/* ─── 하윤이 이유식 가이드 — 모바일 우선 스타일 ─── */
+
+/* ─── CSS 변수 (테마) ─── */
+:root {
+  --primary: #FF9A76;
+  --primary-light: #FFDCB8;
+  --primary-dark: #E8845F;
+  --bg: #FFF8F0;
+  --bg-card: #FFFFFF;
+  --text: #5D4E37;
+  --text-light: #8B7D6B;
+  --text-muted: #B8A99A;
+  --border: #F0E6D8;
+
+  /* 단계 컬러 */
+  --stage-initial: #A8E6CF;
+  --stage-middle: #FFD3A5;
+  --stage-late: #FF8B94;
+  --stage-complete: #C3AED6;
+
+  /* 반응 컬러 */
+  --good: #7BC67E;
+  --okay: #FFD93D;
+  --refuse: #FFA94D;
+  --allergy: #FF6B6B;
+
+  /* 카테고리 컬러 */
+  --cat-grain: #F5E6CC;
+  --cat-veggie: #D4EDDA;
+  --cat-fruit: #FFF3CD;
+  --cat-protein: #F8D7DA;
+  --cat-dairy: #D6EAF8;
+
+  /* 5색 */
+  --color-red: #FF6B6B;
+  --color-green: #7BC67E;
+  --color-yellow: #FFD93D;
+  --color-white: #F5F0E8;
+  --color-purple: #C3AED6;
+
+  /* 사이즈 */
+  --nav-height: 64px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(93, 78, 55, 0.08);
+  --shadow-lg: 0 4px 24px rgba(93, 78, 55, 0.12);
+}
+
+/* ─── 리셋 & 기본 ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding-bottom: calc(var(--nav-height) + 16px);
+  overflow-x: hidden;
+}
+
+a { color: var(--primary-dark); text-decoration: none; }
+
+/* ─── 헤더 ─── */
+.header {
+  background: var(--bg-card);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header .subtitle {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* ─── 월령 프로그레스 바 ─── */
+.stage-progress {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stage-progress .bar {
+  flex: 1;
+  border-radius: 4px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.stage-progress .bar.active { opacity: 1; }
+.stage-progress .bar.initial { background: var(--stage-initial); }
+.stage-progress .bar.middle { background: var(--stage-middle); }
+.stage-progress .bar.late { background: var(--stage-late); }
+.stage-progress .bar.complete { background: var(--stage-complete); }
+
+.stage-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.stage-labels span.active {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ─── 메인 컨텐츠 ─── */
+.content { padding: 16px 20px; }
+
+/* ─── 카드 ─── */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.card-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+/* ─── 오늘의 이유식 카드 (메인) ─── */
+.today-meal {
+  background: linear-gradient(135deg, var(--primary-light), var(--bg-card));
+  border: 2px solid var(--primary);
+  padding: 24px 20px;
+}
+
+.today-meal .meal-time {
+  font-size: 0.8rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.today-meal .meal-content {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.today-meal .meal-amount {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.new-ingredient-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFF0E0;
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-top: 8px;
+}
+
+/* ─── 반응 기록 버튼 ─── */
+.reaction-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.reaction-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  font-size: 0.75rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 48px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.reaction-btn .emoji { font-size: 1.5rem; }
+.reaction-btn:active { transform: scale(0.95); }
+.reaction-btn.selected { border-width: 3px; transform: scale(1.02); }
+.reaction-btn[data-reaction="good"].selected { border-color: var(--good); background: #f0faf0; }
+.reaction-btn[data-reaction="okay"].selected { border-color: var(--okay); background: #fffde0; }
+.reaction-btn[data-reaction="refuse"].selected { border-color: var(--refuse); background: #fff5e0; }
+.reaction-btn[data-reaction="allergy"].selected { border-color: var(--allergy); background: #ffe5e5; }
+
+/* ─── 주간 식단 ─── */
+.weekly-day {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--bg);
+  transition: background 0.2s;
+}
+
+.weekly-day.today {
+  background: var(--primary-light);
+  border: 2px solid var(--primary);
+}
+
+.weekly-day .day-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 28px;
+  text-align: center;
+}
+
+.weekly-day .day-meal {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.weekly-day .day-badge {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-new { background: #FFF0E0; color: var(--primary-dark); }
+.badge-done { background: #E8F5E9; color: #388E3C; }
+
+/* ─── 장보기 목록 ─── */
+.shopping-list {
+  background: #FFF8E1;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.shopping-list h3 {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shopping-list li {
+  list-style: none;
+  padding: 4px 0;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shopping-list li::before { content: ''; }
+
+/* ─── 식재료 카드 그리드 ─── */
+.ingredient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.ingredient-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.ingredient-card:active { transform: scale(0.97); }
+.ingredient-card .emoji { font-size: 2rem; display: block; margin-bottom: 6px; }
+.ingredient-card .name { font-size: 0.85rem; font-weight: 600; }
+
+.ingredient-card .status {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.status-safe { background: #E8F5E9; color: #388E3C; }
+.status-trying { background: #FFF3E0; color: #E65100; }
+.status-untried { background: #F5F5F5; color: #9E9E9E; }
+.status-locked { background: #ECEFF1; color: #78909C; }
+
+.ingredient-card .nutrients {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ─── 카테고리 필터 ─── */
+.category-filter {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-filter::-webkit-scrollbar { display: none; }
+
+.filter-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* ─── 달력 ─── */
+.calendar {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.calendar-header h3 { font-size: 1rem; }
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: var(--text);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.calendar-grid .day-header {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  padding: 4px 0;
+  font-weight: 600;
+}
+
+.calendar-grid .day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.calendar-grid .day-cell.today {
+  background: var(--primary-light);
+  font-weight: 700;
+}
+
+.calendar-grid .day-cell .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 2px;
+}
+
+/* ─── 일지 기록 카드 ─── */
+.journal-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.journal-entry .reaction-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.journal-entry .entry-info { flex: 1; }
+.journal-entry .entry-name { font-size: 0.9rem; font-weight: 600; }
+.journal-entry .entry-amount { font-size: 0.75rem; color: var(--text-light); }
+
+/* ─── 농도 가이드 ─── */
+.texture-guide {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.texture-card {
+  text-align: center;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.texture-card .texture-visual {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.texture-card .texture-name { font-size: 0.85rem; font-weight: 700; }
+.texture-card .texture-desc { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+
+/* ─── 하단 네비게이션 ─── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 200;
+  box-shadow: 0 -2px 12px rgba(93, 78, 55, 0.06);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  min-width: 56px;
+}
+
+.nav-item .nav-icon { font-size: 1.3rem; }
+.nav-item.active { color: var(--primary-dark); font-weight: 700; }
+
+/* ─── 출처 뱃지 ─── */
+.source-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* ─── 5색 균형 미니 차트 ─── */
+.color-balance {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.color-dot.empty { opacity: 0.25; }
+
+/* ─── 알레르기 경고 ─── */
+.allergy-warning {
+  background: #FFF5F5;
+  border: 1px solid var(--allergy);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+
+.allergy-warning h3 {
+  color: var(--allergy);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+/* ─── 설정 (초기 화면) ─── */
+.setup-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.setup-screen h1 {
+  font-size: 1.5rem;
+  margin: 20px 0 8px;
+}
+
+.setup-screen .setup-desc {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 32px;
+}
+
+.setup-form {
+  width: 100%;
+  max-width: 320px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg-card);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus { border-color: var(--primary); }
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.btn-primary:active { background: var(--primary-dark); }
+
+.privacy-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+}
+
+/* ─── 유틸리티 ─── */
+.hidden { display: none !important; }
+.text-center { text-align: center; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+
+/* ─── 섹션 타이틀 ─── */
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin: 20px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── 주간 요약 링크 ─── */
+.week-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.week-link::after { content: ''; }
+
+/* ─── 모달/디테일 패널 ─── */
+.detail-panel {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+}
+
+.detail-content {
+  background: var(--bg-card);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 24px 20px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.detail-close {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+/* ─── 스케줄 타임라인 ─── */
+.schedule-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.schedule-item:last-child { border-bottom: none; }
+.schedule-time { font-size: 0.8rem; color: var(--text-muted); min-width: 52px; }
+.schedule-content { font-size: 0.9rem; }
+
+/* ─── 영양 균형 차트 ─── */
+.nutrition-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.nutrition-bar .label {
+  font-size: 0.75rem;
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nutrition-bar .bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.nutrition-bar .bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}

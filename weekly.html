@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <title>주간 식단표 — 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div id="app-screen">
+    <header class="header">
+      <h1>📅 주간 식단표</h1>
+      <div class="subtitle" id="week-title">이번 주 식단</div>
+    </header>
+
+    <main class="content">
+      <!-- 장보기 목록 -->
+      <div class="shopping-list" id="shopping-list">
+        <h3>🛒 이번 주 장보기 목록</h3>
+        <ul id="shopping-items"></ul>
+      </div>
+
+      <!-- 5색 균형 미니 -->
+      <div class="card" style="padding:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.8rem; font-weight:600;">🎨 이번 주 5색</span>
+          <div class="color-balance" id="color-balance-mini"></div>
+        </div>
+      </div>
+
+      <!-- 영양 포커스 -->
+      <div id="nutrition-focus" class="card" style="padding:14px;">
+        <div style="font-size:0.8rem; font-weight:600; margin-bottom:4px;">🎯 이번 주 영양 포커스</div>
+        <div id="nutrition-focus-text" style="font-size:0.8rem; color:var(--text-light);"></div>
+      </div>
+
+      <!-- 요일별 식단 -->
+      <div id="daily-meals"></div>
+
+      <!-- 출처 -->
+      <div id="plan-source" class="source-badge mt-16"></div>
+
+      <!-- 주 네비게이션 -->
+      <div style="display:flex; justify-content:space-between; margin-top:20px;">
+        <button onclick="changeWeek(-1)" style="padding:10px 20px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); cursor:pointer;">← 지난주</button>
+        <button onclick="changeWeek(1)" style="padding:10px 20px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); cursor:pointer;">다음주 →</button>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>홈</a>
+      <a href="weekly.html" class="nav-item active"><span class="nav-icon">📅</span>식단</a>
+      <a href="ingredients.html" class="nav-item"><span class="nav-icon">🥕</span>식재료</a>
+      <a href="journal.html" class="nav-item"><span class="nav-icon">📝</span>일지</a>
+      <a href="guide.html" class="nav-item"><span class="nav-icon">📖</span>가이드</a>
+    </nav>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentWeekOffset = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      renderWeekly(0);
+    });
+
+    function changeWeek(delta) {
+      currentWeekOffset += delta;
+      renderWeekly(currentWeekOffset);
+    }
+
+    function renderWeekly(offset) {
+      const s = App.getSettings();
+      const weekNum = App.getWeekNumber(s.babyBirthday) + offset;
+      if (weekNum < 1) { currentWeekOffset -= offset; return; }
+
+      const plan = App.getCurrentPlan(weekNum);
+      const titleEl = document.getElementById('week-title');
+
+      if (!plan) {
+        titleEl.textContent = `${weekNum}주차 — 식단 준비 중`;
+        document.getElementById('daily-meals').innerHTML =
+          '<div class="card" style="text-align:center; padding:40px;"><div style="font-size:2rem; margin-bottom:12px;">📋</div><p>이 주차의 식단은 아직 준비 중이에요.</p></div>';
+        return;
+      }
+
+      titleEl.textContent = `${weekNum}주차 · ${plan.title}`;
+
+      // 장보기 목록
+      const shopEl = document.getElementById('shopping-items');
+      shopEl.innerHTML = plan.shopping.map(item => `<li>☑️ ${item}</li>`).join('');
+
+      // 5색 균형
+      const colors = getColorBalance(plan);
+      const colorEl = document.getElementById('color-balance-mini');
+      colorEl.innerHTML = Object.entries(COLOR_GROUPS).map(([key, info]) => {
+        const filled = colors[key];
+        return `<div class="color-dot ${filled ? '' : 'empty'}" style="background:${info.hex}; width:12px; height:12px; ${key === 'white' ? 'border:1px solid #ddd;' : ''}"></div>`;
+      }).join('');
+
+      // 영양 포커스
+      document.getElementById('nutrition-focus-text').textContent = plan.nutritionFocus;
+
+      // 요일별 식단
+      const todayIdx = offset === 0 ? App.getTodayIndex() : -1;
+      const mealsEl = document.getElementById('daily-meals');
+      const weekStart = App.getWeekStart(new Date());
+      weekStart.setDate(weekStart.getDate() + (offset * 7));
+
+      mealsEl.innerHTML = plan.days.map((day, i) => {
+        const meal = day.meals[0];
+        const isToday = i === todayIdx;
+        const dayDate = new Date(weekStart);
+        dayDate.setDate(dayDate.getDate() + i);
+        const dateStr = dayDate.toISOString().split('T')[0];
+        const journalEntry = Journal.getDay(dateStr);
+        const isDone = journalEntry && journalEntry.meals.length > 0;
+
+        let badge = '';
+        if (isDone) {
+          const reaction = journalEntry.meals[0].reaction;
+          const emojiMap = { good: '😋', okay: '😐', refuse: '🙅', allergy: '🚨' };
+          badge = `<span class="day-badge badge-done">${emojiMap[reaction] || '✅'} 완료</span>`;
+        } else if (meal.newItem) {
+          badge = `<span class="day-badge badge-new">🆕 Day${meal.newDay}</span>`;
+        }
+
+        return `
+          <div class="weekly-day ${isToday ? 'today' : ''}">
+            <div class="day-label">${DAY_NAMES[i]}</div>
+            <div class="day-meal">${mealToText(meal)}</div>
+            ${badge}
+          </div>
+        `;
+      }).join('');
+
+      // 출처
+      document.getElementById('plan-source').textContent = `📚 ${plan.source}`;
+    }
+  </script>
+</body>
+</html>

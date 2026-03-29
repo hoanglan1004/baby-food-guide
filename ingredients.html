@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <title>식재료 사전 — 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div id="app-screen">
+    <header class="header">
+      <h1>🥕 식재료 사전</h1>
+      <div class="subtitle" id="avail-count">먹을 수 있는 식재료</div>
+    </header>
+
+    <main class="content">
+      <!-- 검색 -->
+      <div style="margin-bottom:16px;">
+        <input type="text" id="search-input" placeholder="🔍 식재료 검색..."
+               style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:var(--radius-sm); font-size:0.9rem; background:var(--bg-card); outline:none;"
+               oninput="filterIngredients()">
+      </div>
+
+      <!-- 카테고리 필터 -->
+      <div class="category-filter" id="category-filter"></div>
+
+      <!-- 지금 먹을 수 있는 식재료 -->
+      <div class="section-title" id="available-title">✅ 지금 먹을 수 있어요</div>
+      <div class="ingredient-grid" id="available-grid"></div>
+
+      <!-- 아직 이른 식재료 -->
+      <div class="section-title mt-16">🔒 아직 이른 식재료</div>
+      <div class="ingredient-grid" id="locked-grid"></div>
+
+      <!-- 알레르기 주의 -->
+      <div class="allergy-warning mt-16">
+        <h3>⚠️ 알레르기 주의 식품</h3>
+        <div id="allergy-list"></div>
+        <div class="source-badge mt-8">AAP 2024 — 조기 도입이 알레르기 예방에 도움</div>
+      </div>
+
+      <!-- 절대 금지 -->
+      <div class="allergy-warning mt-16" style="background:#FFF0F0; border-color:#D32F2F;">
+        <h3 style="color:#D32F2F;">🚫 절대 금지 식품</h3>
+        <div id="forbidden-list"></div>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>홈</a>
+      <a href="weekly.html" class="nav-item"><span class="nav-icon">📅</span>식단</a>
+      <a href="ingredients.html" class="nav-item active"><span class="nav-icon">🥕</span>식재료</a>
+      <a href="journal.html" class="nav-item"><span class="nav-icon">📝</span>일지</a>
+      <a href="guide.html" class="nav-item"><span class="nav-icon">📖</span>가이드</a>
+    </nav>
+  </div>
+
+  <!-- 식재료 상세 패널 -->
+  <div id="detail-panel" class="detail-panel hidden" onclick="closeDetail(event)">
+    <div class="detail-content" id="detail-content"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentFilter = 'all';
+    let monthAge = 6;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      const s = App.getSettings();
+      monthAge = App.getMonthAge(s.babyBirthday);
+      renderFilters();
+      renderIngredients();
+      renderAllergyList();
+      renderForbiddenList();
+    });
+
+    function renderFilters() {
+      const el = document.getElementById('category-filter');
+      const cats = [{ key: 'all', name: '전체', emoji: '🍽️' }, ...Object.entries(CATEGORIES).map(([k, v]) => ({ key: k, ...v }))];
+      el.innerHTML = cats.map(c =>
+        `<button class="filter-btn ${c.key === currentFilter ? 'active' : ''}" onclick="setFilter('${c.key}')">${c.emoji || ''} ${c.name}</button>`
+      ).join('');
+    }
+
+    function setFilter(cat) {
+      currentFilter = cat;
+      renderFilters();
+      renderIngredients();
+    }
+
+    function filterIngredients() {
+      renderIngredients();
+    }
+
+    function renderIngredients() {
+      const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+      const available = App.getAvailableIngredients(monthAge);
+      const locked = App.getLockedIngredients(monthAge);
+
+      const filter = (list) => list.filter(ing => {
+        if (currentFilter !== 'all' && ing.category !== currentFilter) return false;
+        if (searchTerm && !ing.name.includes(searchTerm)) return false;
+        return true;
+      });
+
+      if (available.length === 0) {
+        document.getElementById('avail-count').textContent =
+          `${monthAge}개월 · 곧 이유식을 시작해요!`;
+        document.getElementById('available-title').textContent = '🔜 6개월부터 먹을 수 있어요';
+        // 6개월 기준으로 미리 보여주기
+        const preview = INGREDIENTS.filter(i => i.startMonth === 6);
+        document.getElementById('available-grid').innerHTML = filter(preview).map(ing => renderCard(ing, false, true)).join('');
+        const laterItems = INGREDIENTS.filter(i => i.startMonth > 6);
+        document.getElementById('locked-grid').innerHTML = filter(laterItems).map(ing => renderCard(ing, true)).join('');
+      } else {
+        document.getElementById('avail-count').textContent =
+          `${monthAge}개월 기준 · ${available.length}종 먹을 수 있어요`;
+        document.getElementById('available-grid').innerHTML = filter(available).map(ing => renderCard(ing, false)).join('');
+        document.getElementById('locked-grid').innerHTML = filter(locked).map(ing => renderCard(ing, true)).join('');
+      }
+    }
+
+    function renderCard(ing, locked, preview) {
+      const status = locked ? 'locked' : Journal.getTriedStatus(ing.id);
+      const statusMap = {
+        safe: { cls: 'status-safe', text: '✅ 안전' },
+        trying: { cls: 'status-trying', text: '🔄 시도중' },
+        untried: { cls: 'status-untried', text: preview ? `🔜 ${ing.startMonth}개월~` : '⬜ 미시도' },
+        allergy: { cls: 'status-locked', text: '🚨 주의' },
+        locked: { cls: 'status-locked', text: `🔒 ${ing.startMonth}개월+` }
+      };
+      const s = statusMap[status];
+      const nutrients = ing.nutrients.slice(0, 3).map(n => NUTRIENTS[n]?.icon || '').join('');
+
+      return `
+        <div class="ingredient-card" onclick="showDetail('${ing.id}')" style="${locked ? 'opacity:0.5;' : ''}">
+          <span class="emoji">${ing.emoji}</span>
+          <div class="name">${ing.name}</div>
+          <div class="status ${s.cls}">${s.text}</div>
+          <div class="nutrients">${nutrients}</div>
+        </div>
+      `;
+    }
+
+    function showDetail(id) {
+      const ing = App.getIngredient(id);
+      if (!ing) return;
+      const status = Journal.getTriedStatus(id);
+      const tried = Journal.getTriedIngredients()[id];
+
+      const panel = document.getElementById('detail-panel');
+      const content = document.getElementById('detail-content');
+
+      const nutrientList = ing.nutrients.map(n => {
+        const info = NUTRIENTS[n];
+        return `<span style="display:inline-block; padding:4px 10px; border-radius:12px; background:var(--bg); font-size:0.8rem; margin:2px;">${info.icon} ${info.name}</span>`;
+      }).join('');
+
+      const allergyHtml = ing.allergyRisk !== 'none' ? `
+        <div class="allergy-warning mt-16">
+          <h3>⚠️ 알레르기 ${ing.allergyRisk === 'high' ? '고위험' : '주의'}</h3>
+          <p style="font-size:0.85rem;">${ing.allergyNote || '소량부터 시작하고 3일간 관찰하세요.'}</p>
+        </div>
+      ` : '';
+
+      const stageHtml = ing.stages ? Object.entries(ing.stages).map(([stage, info]) => {
+        const stageInfo = STAGES[stage];
+        return `
+          <div style="display:flex; gap:8px; padding:8px 0; border-bottom:1px solid var(--border);">
+            <span style="min-width:48px; padding:2px 8px; border-radius:8px; font-size:0.7rem; background:${stageInfo.color}; text-align:center;">${stageInfo.name}</span>
+            <div style="font-size:0.85rem;">
+              <div>${info.form}</div>
+              <div style="color:var(--text-light); font-size:0.75rem;">${info.amount}</div>
+            </div>
+          </div>
+        `;
+      }).join('') : '';
+
+      content.innerHTML = `
+        <div class="detail-close"></div>
+        <div style="text-align:center; margin-bottom:16px;">
+          <div style="font-size:3rem;">${ing.emoji}</div>
+          <h2 style="font-size:1.3rem; margin:8px 0;">${ing.name}</h2>
+          <div style="font-size:0.85rem; color:var(--text-light);">${CATEGORIES[ing.category]?.name || ''} · ${ing.startMonth}개월부터</div>
+          ${tried ? `<div style="margin-top:8px; font-size:0.8rem;">시도 ${tried.tryCount}회 · ${status === 'safe' ? '✅ 안전 확인' : '🔄 관찰 중'}</div>` : ''}
+        </div>
+        <div style="margin-bottom:16px;">${nutrientList}</div>
+        <div class="card" style="padding:14px;">
+          <div style="font-size:0.85rem; font-weight:600; margin-bottom:8px;">💡 팁</div>
+          <div style="font-size:0.85rem; color:var(--text-light);">${ing.tip}</div>
+        </div>
+        ${stageHtml ? `<div class="card" style="padding:14px;"><div style="font-size:0.85rem; font-weight:600; margin-bottom:8px;">📏 단계별 형태·양</div>${stageHtml}</div>` : ''}
+        ${allergyHtml}
+        <div class="source-badge mt-8">📚 ${ing.source}</div>
+      `;
+
+      panel.classList.remove('hidden');
+    }
+
+    function closeDetail(e) {
+      if (e.target === document.getElementById('detail-panel')) {
+        document.getElementById('detail-panel').classList.add('hidden');
+      }
+    }
+
+    function renderAllergyList() {
+      document.getElementById('allergy-list').innerHTML = ALLERGY_FOODS.map(f =>
+        `<div style="padding:6px 0; font-size:0.85rem; display:flex; gap:8px;">
+          <span>${f.emoji}</span>
+          <div><strong>${f.name}</strong> (${f.startMonth}개월+) — ${f.note}</div>
+        </div>`
+      ).join('');
+    }
+
+    function renderForbiddenList() {
+      document.getElementById('forbidden-list').innerHTML = FORBIDDEN_FOODS.map(f =>
+        `<div style="padding:6px 0; font-size:0.85rem; display:flex; gap:8px;">
+          <span>${f.emoji}</span>
+          <div><strong>${f.name}</strong> — ${f.reason}</div>
+        </div>`
+      ).join('');
+    }
+  </script>
+</body>
+</html>

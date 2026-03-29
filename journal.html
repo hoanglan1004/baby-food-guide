@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <title>이유식 일지 — 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div id="app-screen">
+    <header class="header">
+      <h1>📝 이유식 일지</h1>
+      <div class="subtitle">먹인 기록과 반응을 한눈에</div>
+    </header>
+
+    <main class="content">
+      <!-- 달력 -->
+      <div class="calendar">
+        <div class="calendar-header">
+          <button onclick="changeMonth(-1)">◀</button>
+          <h3 id="calendar-title">2026년 4월</h3>
+          <button onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div style="display:flex; gap:12px; justify-content:center; margin-top:12px; font-size:0.7rem; color:var(--text-muted);">
+          <span>🟢 잘먹음</span>
+          <span>🟡 보통</span>
+          <span>🟠 거부</span>
+          <span>🔴 알레르기</span>
+        </div>
+      </div>
+
+      <!-- 선택한 날짜 기록 -->
+      <div class="card mt-16" id="day-detail">
+        <div class="card-title" id="day-detail-title">날짜를 선택하세요</div>
+        <div id="day-detail-content">
+          <p style="color:var(--text-light); font-size:0.85rem;">달력에서 날짜를 터치하면 그날의 기록을 볼 수 있어요</p>
+        </div>
+      </div>
+
+      <!-- 시도한 식재료 현황 -->
+      <div class="card">
+        <div class="card-title">🥕 식재료 시도 현황</div>
+        <div id="tried-summary"></div>
+      </div>
+
+      <!-- 데이터 관리 -->
+      <div class="card" style="text-align:center;">
+        <div class="card-title" style="justify-content:center;">💾 데이터 관리</div>
+        <div style="display:flex; gap:10px; justify-content:center;">
+          <button onclick="exportData()" style="padding:10px 20px; border:1px solid var(--primary); border-radius:var(--radius-sm); background:var(--bg-card); color:var(--primary-dark); font-size:0.8rem; cursor:pointer;">
+            📤 내보내기
+          </button>
+          <label style="padding:10px 20px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-card); font-size:0.8rem; cursor:pointer;">
+            📥 가져오기
+            <input type="file" accept=".json" onchange="importData(event)" style="display:none;">
+          </label>
+        </div>
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:8px;">폰 초기화 전에 백업하세요</p>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>홈</a>
+      <a href="weekly.html" class="nav-item"><span class="nav-icon">📅</span>식단</a>
+      <a href="ingredients.html" class="nav-item"><span class="nav-icon">🥕</span>식재료</a>
+      <a href="journal.html" class="nav-item active"><span class="nav-icon">📝</span>일지</a>
+      <a href="guide.html" class="nav-item"><span class="nav-icon">📖</span>가이드</a>
+    </nav>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentYear, currentMonth;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      const now = new Date();
+      currentYear = now.getFullYear();
+      currentMonth = now.getMonth();
+      renderCalendar();
+      renderTriedSummary();
+      // 오늘 자동 선택
+      selectDay(Journal.todayStr());
+    });
+
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      document.getElementById('calendar-title').textContent = `${currentYear}년 ${currentMonth + 1}월`;
+      const grid = document.getElementById('calendar-grid');
+
+      // 요일 헤더
+      let html = ['일', '월', '화', '수', '목', '금', '토'].map(d =>
+        `<div class="day-header">${d}</div>`
+      ).join('');
+
+      // 첫 날의 요일
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const today = new Date();
+      const todayStr = Journal.todayStr();
+
+      // 빈 칸
+      for (let i = 0; i < firstDay; i++) {
+        html += '<div class="day-cell"></div>';
+      }
+
+      // 날짜
+      const journal = Journal.getAll();
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isToday = dateStr === todayStr;
+        const entry = journal[dateStr];
+
+        let dotHtml = '';
+        if (entry && entry.meals.length > 0) {
+          const reaction = entry.meals[0].reaction;
+          const colorMap = { good: 'var(--good)', okay: 'var(--okay)', refuse: 'var(--refuse)', allergy: 'var(--allergy)' };
+          dotHtml = `<div class="dot" style="background:${colorMap[reaction] || 'var(--good)'}"></div>`;
+        }
+
+        html += `<div class="day-cell ${isToday ? 'today' : ''}" onclick="selectDay('${dateStr}')">${d}${dotHtml}</div>`;
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function selectDay(dateStr) {
+      const titleEl = document.getElementById('day-detail-title');
+      const contentEl = document.getElementById('day-detail-content');
+
+      const date = new Date(dateStr + 'T00:00:00');
+      titleEl.textContent = `📅 ${formatDate(date)}`;
+
+      const entry = Journal.getDay(dateStr);
+      if (!entry || entry.meals.length === 0) {
+        contentEl.innerHTML = '<p style="color:var(--text-light); font-size:0.85rem;">이 날은 기록이 없어요</p>';
+        return;
+      }
+
+      const reactionMap = {
+        good: { emoji: '😋', text: '잘먹음', color: 'var(--good)' },
+        okay: { emoji: '😐', text: '보통', color: 'var(--okay)' },
+        refuse: { emoji: '🙅', text: '거부', color: 'var(--refuse)' },
+        allergy: { emoji: '🚨', text: '알레르기', color: 'var(--allergy)' }
+      };
+
+      contentEl.innerHTML = entry.meals.map(m => {
+        const r = reactionMap[m.reaction] || reactionMap.good;
+        const ing = App.getIngredient(m.ingredient);
+        return `
+          <div class="journal-entry">
+            <div class="reaction-dot" style="background:${r.color}"></div>
+            <div class="entry-info">
+              <div class="entry-name">${ing ? ing.emoji : ''} ${m.name}</div>
+              <div class="entry-amount">${m.amount}</div>
+            </div>
+            <div style="font-size:0.8rem;">${r.emoji} ${r.text}</div>
+          </div>
+        `;
+      }).join('');
+
+      if (entry.memo) {
+        contentEl.innerHTML += `<div style="margin-top:8px; padding:8px 12px; background:var(--bg); border-radius:8px; font-size:0.8rem;">📝 ${entry.memo}</div>`;
+      }
+    }
+
+    function renderTriedSummary() {
+      const tried = Journal.getTriedIngredients();
+      const el = document.getElementById('tried-summary');
+      const entries = Object.entries(tried);
+
+      if (entries.length === 0) {
+        el.innerHTML = '<p style="font-size:0.85rem; color:var(--text-light);">아직 시도한 식재료가 없어요</p>';
+        return;
+      }
+
+      const safe = entries.filter(([, v]) => v.tryCount >= 3 && v.lastReaction !== 'allergy');
+      const trying = entries.filter(([, v]) => v.tryCount < 3 && v.lastReaction !== 'allergy');
+      const allergyItems = entries.filter(([, v]) => v.lastReaction === 'allergy');
+
+      let html = '';
+      if (safe.length > 0) {
+        html += `<div class="section-title" style="margin-top:0;">✅ 안전 확인 (${safe.length}종)</div>`;
+        html += safe.map(([id, v]) => {
+          const ing = App.getIngredient(id);
+          return ing ? `<span style="display:inline-block; margin:3px; padding:4px 10px; border-radius:16px; font-size:0.8rem; background:#E8F5E9;">${ing.emoji} ${ing.name}</span>` : '';
+        }).join('');
+      }
+      if (trying.length > 0) {
+        html += `<div class="section-title">🔄 관찰 중 (${trying.length}종)</div>`;
+        html += trying.map(([id, v]) => {
+          const ing = App.getIngredient(id);
+          return ing ? `<span style="display:inline-block; margin:3px; padding:4px 10px; border-radius:16px; font-size:0.8rem; background:#FFF3E0;">${ing.emoji} ${ing.name} (${v.tryCount}/3일)</span>` : '';
+        }).join('');
+      }
+      if (allergyItems.length > 0) {
+        html += `<div class="section-title">🚨 알레르기 의심 (${allergyItems.length}종)</div>`;
+        html += allergyItems.map(([id]) => {
+          const ing = App.getIngredient(id);
+          return ing ? `<span style="display:inline-block; margin:3px; padding:4px 10px; border-radius:16px; font-size:0.8rem; background:#FFEBEE;">${ing.emoji} ${ing.name}</span>` : '';
+        }).join('');
+      }
+
+      el.innerHTML = html;
+    }
+
+    // 데이터 내보내기/가져오기
+    function exportData() {
+      const data = App.getSettings();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `이유식일지_${Journal.todayStr()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.babyBirthday) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            alert('데이터를 가져왔습니다!');
+            location.reload();
+          } else {
+            alert('올바른 백업 파일이 아닙니다.');
+          }
+        } catch {
+          alert('파일을 읽을 수 없습니다.');
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>

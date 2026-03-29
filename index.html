@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>하윤이 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+
+  <!-- 초기 설정 화면 -->
+  <div id="setup-screen" class="setup-screen">
+    <div style="font-size: 4rem;">🍚</div>
+    <h1>이유식 가이드</h1>
+    <p class="setup-desc">과학적 근거로 만든 우리 아이 이유식 길잡이</p>
+
+    <form class="setup-form" id="setup-form">
+      <div class="form-group">
+        <label>👶 아기 이름</label>
+        <input type="text" id="baby-name" placeholder="예: 하윤이" required>
+      </div>
+      <div class="form-group">
+        <label>🎂 생년월일</label>
+        <input type="date" id="baby-birthday" required>
+      </div>
+      <button type="submit" class="btn-primary">🚀 시작하기</button>
+      <p class="privacy-note">💡 입력한 정보는 이 폰에만 저장됩니다 (서버 전송 없음)</p>
+    </form>
+  </div>
+
+  <!-- 메인 앱 화면 -->
+  <div id="app-screen" class="hidden">
+
+    <!-- 헤더 -->
+    <header class="header">
+      <h1>🍚 <span id="header-baby-name">하윤이</span> 이유식</h1>
+      <div class="subtitle" id="header-info">생후 6개월 · 초기 이유식</div>
+      <div class="stage-progress">
+        <div class="bar initial" id="bar-initial"></div>
+        <div class="bar middle" id="bar-middle"></div>
+        <div class="bar late" id="bar-late"></div>
+        <div class="bar complete" id="bar-complete"></div>
+      </div>
+      <div class="stage-labels">
+        <span id="label-initial">초기(6m)</span>
+        <span id="label-middle">중기(7~8m)</span>
+        <span id="label-late">후기(9~11m)</span>
+        <span id="label-complete">완료(12m+)</span>
+      </div>
+    </header>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="content">
+
+      <!-- 오늘의 이유식 -->
+      <div class="card today-meal" id="today-meal-card">
+        <div class="meal-time" id="today-date">🌅 오늘의 이유식</div>
+        <div class="meal-content" id="today-meal-content">로딩 중...</div>
+        <div class="meal-amount" id="today-meal-amount"></div>
+
+        <div id="today-new-badge" class="hidden">
+          <div class="new-ingredient-badge">
+            <span>🆕</span>
+            <span id="new-badge-text">새 식재료</span>
+          </div>
+        </div>
+
+        <!-- 반응 기록 버튼 -->
+        <div class="reaction-buttons" id="reaction-buttons">
+          <button class="reaction-btn" data-reaction="good" onclick="recordReaction('good')">
+            <span class="emoji">😋</span>
+            잘먹음
+          </button>
+          <button class="reaction-btn" data-reaction="okay" onclick="recordReaction('okay')">
+            <span class="emoji">😐</span>
+            보통
+          </button>
+          <button class="reaction-btn" data-reaction="refuse" onclick="recordReaction('refuse')">
+            <span class="emoji">🙅</span>
+            거부
+          </button>
+          <button class="reaction-btn" data-reaction="allergy" onclick="recordReaction('allergy')">
+            <span class="emoji">🚨</span>
+            알레르기
+          </button>
+        </div>
+        <div id="reaction-saved" class="hidden" style="text-align:center; margin-top:12px; font-size:0.85rem; color:var(--good); font-weight:600;">
+          ✅ 기록 완료!
+        </div>
+      </div>
+
+      <!-- 이번 주 요약 -->
+      <div class="card" id="week-summary-card">
+        <div class="card-title">📋 이번 주 요약</div>
+        <div id="week-summary-content"></div>
+        <a href="weekly.html" class="week-link">📅 주간 식단표 보기 →</a>
+      </div>
+
+      <!-- 5색 균형 -->
+      <div class="card" id="color-balance-card">
+        <div class="card-title">🎨 이번 주 5색 균형</div>
+        <div class="card-subtitle">편식 없이 골고루! 5가지 색상의 식재료를 고루 먹이면 영양 균형이 맞아요</div>
+        <div class="color-balance" id="color-balance"></div>
+        <div class="source-badge">WHO — 다양한 색상의 채소·과일 권장</div>
+      </div>
+
+      <!-- 영양소 균형 -->
+      <div class="card" id="nutrition-card">
+        <div class="card-title">💪 이번 주 영양소</div>
+        <div id="nutrition-bars"></div>
+      </div>
+
+      <!-- 시도한 식재료 현황 -->
+      <div class="card">
+        <div class="card-title">🥕 시도한 식재료</div>
+        <div id="tried-ingredients"></div>
+        <a href="ingredients.html" class="week-link">🥕 식재료 사전 보기 →</a>
+      </div>
+
+    </main>
+
+    <!-- 하단 네비게이션 -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        홈
+      </a>
+      <a href="weekly.html" class="nav-item">
+        <span class="nav-icon">📅</span>
+        식단
+      </a>
+      <a href="ingredients.html" class="nav-item">
+        <span class="nav-icon">🥕</span>
+        식재료
+      </a>
+      <a href="journal.html" class="nav-item">
+        <span class="nav-icon">📝</span>
+        일지
+      </a>
+      <a href="guide.html" class="nav-item">
+        <span class="nav-icon">📖</span>
+        가이드
+      </a>
+    </nav>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/sw-register.js"></script>
+  <script>
+    // ─── 페이지 초기화 ──────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      if (App.isSetupDone()) {
+        showApp();
+      } else {
+        document.getElementById('setup-screen').classList.remove('hidden');
+      }
+    });
+
+    // ─── 초기 설정 폼 ──────────────────
+    document.getElementById('setup-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('baby-name').value.trim();
+      const birthday = document.getElementById('baby-birthday').value;
+      if (!name || !birthday) return;
+
+      App.saveSettings({ babyName: name, babyBirthday: birthday, journal: {}, triedIngredients: {} });
+      showApp();
+    });
+
+    // ─── 메인 앱 표시 ──────────────────
+    function showApp() {
+      document.getElementById('setup-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('hidden');
+
+      const s = App.getSettings();
+      const monthAge = App.getMonthAge(s.babyBirthday);
+      const stage = App.getCurrentStage(monthAge);
+      const weekNum = App.getWeekNumber(s.babyBirthday);
+      const plan = App.getCurrentPlan(weekNum);
+
+      renderHeader(s.babyName, monthAge, stage);
+      renderTodayMeal(plan, monthAge);
+      renderWeekSummary(plan, weekNum);
+      renderColorBalance(plan);
+      renderNutritionBars(plan);
+      renderTriedIngredients();
+      restoreTodayReaction();
+    }
+
+    // ─── 헤더 렌더링 ──────────────────
+    function renderHeader(name, monthAge, stage) {
+      document.getElementById('header-baby-name').textContent = name;
+      const stageInfo = STAGES[stage];
+      document.getElementById('header-info').textContent =
+        `${formatMonthAge(monthAge)} · ${stageInfo.label}`;
+
+      // 프로그레스 바 활성화
+      const stageOrder = ['initial', 'middle', 'late', 'complete'];
+      const currentIdx = stageOrder.indexOf(stage);
+      stageOrder.forEach((s, i) => {
+        const bar = document.getElementById(`bar-${s}`);
+        const label = document.getElementById(`label-${s}`);
+        if (i <= currentIdx) {
+          bar.classList.add('active');
+          if (i === currentIdx) label.classList.add('active');
+        }
+      });
+    }
+
+    // ─── 오늘의 이유식 렌더링 ──────────────────
+    function renderTodayMeal(plan, monthAge) {
+      const dateEl = document.getElementById('today-date');
+      dateEl.textContent = `🌅 오늘의 이유식 (${formatDate(new Date())})`;
+
+      const contentEl = document.getElementById('today-meal-content');
+      const amountEl = document.getElementById('today-meal-amount');
+      const badgeEl = document.getElementById('today-new-badge');
+      const badgeText = document.getElementById('new-badge-text');
+
+      if (!plan) {
+        if (monthAge < 6) {
+          contentEl.textContent = '아직 이유식 시작 전이에요 🍼';
+          amountEl.textContent = '생후 6개월(만)부터 시작합니다';
+        } else {
+          contentEl.textContent = '식단 데이터 준비 중...';
+          amountEl.textContent = '더 많은 식단이 곧 추가됩니다';
+        }
+        return;
+      }
+
+      const todayMeal = getTodayMeal(plan);
+      if (!todayMeal) return;
+
+      const meal = todayMeal.meals[0];
+      contentEl.textContent = mealToText(meal);
+      amountEl.textContent = `양: ${meal.amount}`;
+
+      // 새 식재료 배지
+      if (meal.newItem) {
+        badgeEl.classList.remove('hidden');
+        const ing = App.getIngredient(meal.newItem);
+        badgeText.textContent = `${ing.emoji} ${ing.name} — Day ${meal.newDay}/3 (새 식재료)`;
+      }
+    }
+
+    // ─── 이번 주 요약 ──────────────────
+    function renderWeekSummary(plan, weekNum) {
+      const el = document.getElementById('week-summary-content');
+      if (!plan) {
+        el.innerHTML = '<p style="color:var(--text-light); font-size:0.85rem;">식단 정보가 아직 없어요</p>';
+        return;
+      }
+
+      const newIngs = plan.newIngredients.map(id => {
+        const ing = App.getIngredient(id);
+        const status = Journal.getTriedStatus(id);
+        const statusLabel = status === 'safe' ? '✅' : status === 'trying' ? '🔄' : '🆕';
+        return `${ing.emoji} ${ing.name} ${statusLabel}`;
+      }).join('  ');
+
+      el.innerHTML = `
+        <div style="font-size:0.9rem; font-weight:600; margin-bottom:4px;">${plan.title}</div>
+        <div style="font-size:0.8rem; color:var(--text-light); margin-bottom:8px;">${plan.desc}</div>
+        <div style="font-size:0.8rem;">새 식재료: ${newIngs}</div>
+        <div class="source-badge">${plan.source}</div>
+      `;
+    }
+
+    // ─── 5색 균형 렌더링 ──────────────────
+    function renderColorBalance(plan) {
+      const colors = getColorBalance(plan);
+      const el = document.getElementById('color-balance');
+      const colorNames = { red: '빨강', green: '초록', yellow: '노랑', white: '흰색', purple: '보라' };
+
+      el.innerHTML = Object.entries(COLOR_GROUPS).map(([key, info]) => {
+        const filled = colors[key];
+        return `
+          <div style="text-align:center;">
+            <div class="color-dot ${filled ? '' : 'empty'}"
+                 style="background:${info.hex}; ${key === 'white' ? 'border:1px solid #ddd;' : ''}"></div>
+            <div style="font-size:0.6rem; margin-top:4px; color:${filled ? 'var(--text)' : 'var(--text-muted)'};">
+              ${info.name} ${filled ? '✓' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ─── 영양소 바 렌더링 ──────────────────
+    function renderNutritionBars(plan) {
+      const nutri = getNutritionBalance(plan);
+      const el = document.getElementById('nutrition-bars');
+      const maxVal = Math.max(...Object.values(nutri), 1);
+
+      const importantNutrients = ['iron', 'protein', 'vitaminA', 'vitaminC', 'carbs', 'calcium'];
+      el.innerHTML = importantNutrients.map(key => {
+        const info = NUTRIENTS[key];
+        const val = nutri[key] || 0;
+        const pct = Math.min((val / maxVal) * 100, 100);
+        return `
+          <div class="nutrition-bar">
+            <div class="label">${info.icon} ${info.name}</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${pct}%; background:${info.color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ─── 시도한 식재료 ──────────────────
+    function renderTriedIngredients() {
+      const tried = Journal.getTriedIngredients();
+      const el = document.getElementById('tried-ingredients');
+
+      const entries = Object.entries(tried);
+      if (entries.length === 0) {
+        el.innerHTML = '<p style="font-size:0.85rem; color:var(--text-light);">아직 기록이 없어요. 오늘부터 시작해보세요!</p>';
+        return;
+      }
+
+      el.innerHTML = entries.map(([id, info]) => {
+        const ing = App.getIngredient(id);
+        if (!ing) return '';
+        const statusClass = info.tryCount >= 3 ? 'status-safe' :
+                           info.lastReaction === 'allergy' ? 'status-locked' : 'status-trying';
+        const statusText = info.tryCount >= 3 ? `✅ 안전(${info.tryCount}회)` :
+                          info.lastReaction === 'allergy' ? '🚨 알레르기' :
+                          `🔄 ${info.tryCount}/3일`;
+        return `<span style="display:inline-block; margin:4px 6px 4px 0; padding:4px 10px; border-radius:16px; font-size:0.8rem;"
+                      class="${statusClass}">${ing.emoji} ${ing.name} ${statusText}</span>`;
+      }).join('');
+    }
+
+    // ─── 반응 기록 ──────────────────
+    let currentReaction = null;
+
+    function recordReaction(reaction) {
+      const s = App.getSettings();
+      const weekNum = App.getWeekNumber(s.babyBirthday);
+      const plan = App.getCurrentPlan(weekNum);
+      if (!plan) return;
+
+      const todayMeal = getTodayMeal(plan);
+      if (!todayMeal) return;
+
+      const meal = todayMeal.meals[0];
+
+      // 모든 식재료에 대해 기록
+      [meal.base, meal.side, meal.extra].forEach(id => {
+        if (!id) return;
+        const ing = App.getIngredient(id);
+        if (ing) {
+          Journal.saveReaction(Journal.todayStr(), id, ing.name, meal.amount, reaction);
+        }
+      });
+
+      // UI 업데이트
+      currentReaction = reaction;
+      document.querySelectorAll('.reaction-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.reaction === reaction);
+      });
+      document.getElementById('reaction-saved').classList.remove('hidden');
+      renderTriedIngredients();
+
+      setTimeout(() => {
+        document.getElementById('reaction-saved').classList.add('hidden');
+      }, 2000);
+    }
+
+    // 오늘 이미 기록한 반응 복원
+    function restoreTodayReaction() {
+      const todayEntry = Journal.getDay(Journal.todayStr());
+      if (todayEntry && todayEntry.meals.length > 0) {
+        const reaction = todayEntry.meals[0].reaction;
+        document.querySelectorAll('.reaction-btn').forEach(btn => {
+          btn.classList.toggle('selected', btn.dataset.reaction === reaction);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

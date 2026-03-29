@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FF9A76">
+  <title>가이드 — 이유식 가이드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+  <div id="app-screen">
+    <header class="header">
+      <h1>📖 이유식 가이드</h1>
+      <div class="subtitle" id="guide-subtitle">과학적 근거 기반 이유식 안내</div>
+    </header>
+
+    <main class="content">
+
+      <!-- 현재 단계 안내 -->
+      <div class="card" id="current-stage-card" style="border-left: 4px solid var(--stage-initial);">
+        <div class="card-title" id="stage-title">📍 지금 단계</div>
+        <div id="stage-info"></div>
+      </div>
+
+      <!-- 농도 가이드 -->
+      <div class="card">
+        <div class="card-title">🥣 농도 가이드</div>
+        <div class="card-subtitle">단계별로 이렇게 달라져요</div>
+        <div class="texture-guide">
+          <div class="texture-card">
+            <div class="texture-visual" style="background: var(--stage-initial);">
+              <span style="font-size:1rem;">〰️</span>
+            </div>
+            <div class="texture-name">초기 (6개월)</div>
+            <div class="texture-desc">묽은 미음<br>10배죽 · 물처럼</div>
+          </div>
+          <div class="texture-card">
+            <div class="texture-visual" style="background: var(--stage-middle);">
+              <span style="font-size:1rem;">🫗</span>
+            </div>
+            <div class="texture-name">중기 (7~8개월)</div>
+            <div class="texture-desc">걸쭉한 죽<br>7배죽 · 2~3mm 입자</div>
+          </div>
+          <div class="texture-card">
+            <div class="texture-visual" style="background: var(--stage-late);">
+              <span style="font-size:1rem;">🥄</span>
+            </div>
+            <div class="texture-name">후기 (9~11개월)</div>
+            <div class="texture-desc">진밥<br>5배죽 · 5~7mm 덩어리</div>
+          </div>
+          <div class="texture-card">
+            <div class="texture-visual" style="background: var(--stage-complete);">
+              <span style="font-size:1rem;">🍚</span>
+            </div>
+            <div class="texture-name">완료기 (12개월+)</div>
+            <div class="texture-desc">일반밥<br>1cm 덩어리</div>
+          </div>
+        </div>
+        <div class="source-badge mt-8">대한소아청소년과학회 이유식 가이드라인</div>
+      </div>
+
+      <!-- 크기 가이드 -->
+      <div class="card">
+        <div class="card-title">📏 크기 가이드</div>
+        <div style="padding:8px 0;">
+          <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+            <div style="width:40px; height:40px; border-radius:50%; background:var(--stage-initial); display:flex; align-items:center; justify-content:center;">●</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">초기 — 으깬 것</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">입자 없이 부드럽게. 체에 걸러도 좋음</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+            <div style="width:40px; height:40px; border-radius:50%; background:var(--stage-middle); display:flex; align-items:center; justify-content:center;">◉</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">중기 — 2~3mm</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">혀로 으깰 수 있는 크기. 두부 정도</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border);">
+            <div style="width:40px; height:40px; border-radius:50%; background:var(--stage-late); display:flex; align-items:center; justify-content:center;">◎</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">후기 — 5~7mm</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">잇몸으로 씹는 연습. 바나나 정도 무름</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:10px 0;">
+            <div style="width:40px; height:40px; border-radius:50%; background:var(--stage-complete); display:flex; align-items:center; justify-content:center;">○</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">완료기 — 1cm</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">어금니로 씹기. 어른 반찬 잘게 썬 것</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하루 스케줄 -->
+      <div class="card">
+        <div class="card-title">⏰ 하루 스케줄</div>
+        <div id="daily-schedule"></div>
+        <div class="allergy-warning mt-16" style="background:#E8F5E9; border-color:var(--good);">
+          <h3 style="color:#388E3C;">💡 핵심 원칙</h3>
+          <p style="font-size:0.85rem;">이유식은 <strong>수유 전에</strong> 먹이세요. 배고플 때 이유식을 더 잘 받아들여요.</p>
+          <div class="source-badge mt-8">대한소아청소년과학회</div>
+        </div>
+      </div>
+
+      <!-- 3일 규칙 -->
+      <div class="card">
+        <div class="card-title">📋 3일 규칙</div>
+        <div class="card-subtitle">새 식재료를 안전하게 도입하는 방법</div>
+        <div style="padding:8px 0;">
+          <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);">
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--primary-light); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; flex-shrink:0;">1</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">Day 1 — 첫 시도</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">🆕 새 식재료 1숟가락만. 4시간 후까지 반응 관찰</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);">
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--primary-light); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; flex-shrink:0;">2</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">Day 2 — 양 늘리기</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">같은 식재료, 양을 조금 늘려서. 계속 반응 관찰</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);">
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--primary-light); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; flex-shrink:0;">3</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">Day 3 — 최종 확인</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">정상량으로 시도. 이상 없으면 ✅ 안전 식재료!</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px; padding:12px 0;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#FFEBEE; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">🚨</div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem; color:var(--allergy);">이상 반응 시</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">즉시 중단! 2주 후 재시도. 심하면 소아과 방문</div>
+            </div>
+          </div>
+        </div>
+        <div class="source-badge">WHO 보완식 가이드라인 + AAP</div>
+      </div>
+
+      <!-- 5색 균형 설명 -->
+      <div class="card">
+        <div class="card-title">🎨 5색 균형이란?</div>
+        <div class="card-subtitle">다양한 색상 = 다양한 영양소 = 편식 없는 아이</div>
+        <div style="padding:8px 0;">
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
+            <div class="color-dot" style="background:var(--color-red); width:24px; height:24px;"></div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">빨강 — 항산화, 면역력</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">당근, 토마토, 사과, 소고기</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
+            <div class="color-dot" style="background:var(--color-green); width:24px; height:24px;"></div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">초록 — 비타민, 미네랄</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">애호박, 브로콜리, 시금치, 아보카도</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
+            <div class="color-dot" style="background:var(--color-yellow); width:24px; height:24px;"></div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">노랑 — 에너지, 비타민A</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">고구마, 단호박, 바나나, 달걀노른자</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
+            <div class="color-dot" style="background:var(--color-white); width:24px; height:24px; border:1px solid #ddd;"></div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">흰색 — 면역, 소화</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">쌀, 감자, 두부, 배</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
+            <div class="color-dot" style="background:var(--color-purple); width:24px; height:24px;"></div>
+            <div>
+              <div style="font-weight:600; font-size:0.9rem;">보라 — 안토시아닌, 항산화</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">비트, 자두, 가지, 블루베리</div>
+            </div>
+          </div>
+        </div>
+        <div class="source-badge">WHO — 다양한 색상의 채소·과일 섭취 권장</div>
+      </div>
+
+      <!-- 설정 변경 -->
+      <div class="card" style="text-align:center;">
+        <div class="card-title" style="justify-content:center;">⚙️ 설정</div>
+        <div id="settings-info" style="font-size:0.85rem; margin-bottom:12px;"></div>
+        <button onclick="resetSetup()" style="padding:10px 20px; border:1px solid var(--allergy); border-radius:var(--radius-sm); background:var(--bg-card); color:var(--allergy); font-size:0.8rem; cursor:pointer;">
+          🔄 아기 정보 재설정
+        </button>
+        <p style="font-size:0.7rem; color:var(--text-muted); margin-top:8px;">기록은 유지됩니다</p>
+      </div>
+
+    </main>
+
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>홈</a>
+      <a href="weekly.html" class="nav-item"><span class="nav-icon">📅</span>식단</a>
+      <a href="ingredients.html" class="nav-item"><span class="nav-icon">🥕</span>식재료</a>
+      <a href="journal.html" class="nav-item"><span class="nav-icon">📝</span>일지</a>
+      <a href="guide.html" class="nav-item active"><span class="nav-icon">📖</span>가이드</a>
+    </nav>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      const s = App.getSettings();
+      const monthAge = App.getMonthAge(s.babyBirthday);
+      const stage = App.getCurrentStage(monthAge);
+      renderStageInfo(stage, monthAge, s.babyName);
+      renderSchedule(stage);
+      renderSettingsInfo(s, monthAge);
+    });
+
+    function renderStageInfo(stage, monthAge, name) {
+      const info = STAGES[stage];
+      const card = document.getElementById('current-stage-card');
+      card.style.borderLeftColor = info.color;
+
+      document.getElementById('stage-title').textContent = `📍 ${name}는 지금: ${info.label}`;
+      document.getElementById('guide-subtitle').textContent = `${formatMonthAge(monthAge)} 기준`;
+
+      document.getElementById('stage-info').innerHTML = `
+        <div style="display:grid; gap:10px; margin-top:8px;">
+          <div style="display:flex; gap:8px; align-items:start;">
+            <span style="font-size:1.2rem;">🥣</span>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem;">농도</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">${info.texture}</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:start;">
+            <span style="font-size:1.2rem;">📏</span>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem;">양</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">${info.amount}</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:start;">
+            <span style="font-size:1.2rem;">🍽️</span>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem;">하루 횟수</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">${info.mealsPerDay}회</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; align-items:start;">
+            <span style="font-size:1.2rem;">💡</span>
+            <div>
+              <div style="font-weight:600; font-size:0.85rem;">팁</div>
+              <div style="font-size:0.8rem; color:var(--text-light);">${info.tip}</div>
+            </div>
+          </div>
+        </div>
+        <div class="source-badge mt-8">${info.source}</div>
+      `;
+    }
+
+    function renderSchedule(stage) {
+      const schedules = {
+        initial: [
+          { time: '06:00', icon: '🍼', text: '모유/분유' },
+          { time: '10:00', icon: '🍚', text: '이유식 (1회) + 모유/분유' },
+          { time: '14:00', icon: '🍼', text: '모유/분유' },
+          { time: '18:00', icon: '🍼', text: '모유/분유' },
+          { time: '22:00', icon: '🍼', text: '모유/분유 (취침 전)' }
+        ],
+        middle: [
+          { time: '06:00', icon: '🍼', text: '모유/분유' },
+          { time: '10:00', icon: '🍚', text: '이유식 1회 + 모유/분유' },
+          { time: '14:00', icon: '🍚', text: '이유식 2회 + 모유/분유' },
+          { time: '18:00', icon: '🍼', text: '모유/분유' },
+          { time: '22:00', icon: '🍼', text: '모유/분유 (취침 전)' }
+        ],
+        late: [
+          { time: '07:00', icon: '🍚', text: '이유식 1회 (아침)' },
+          { time: '10:00', icon: '🍼', text: '모유/분유 + 간식' },
+          { time: '12:00', icon: '🍚', text: '이유식 2회 (점심)' },
+          { time: '15:00', icon: '🍼', text: '모유/분유' },
+          { time: '18:00', icon: '🍚', text: '이유식 3회 (저녁)' },
+          { time: '21:00', icon: '🍼', text: '모유/분유 (취침 전)' }
+        ],
+        complete: [
+          { time: '07:30', icon: '🍚', text: '아침 식사' },
+          { time: '10:00', icon: '🍎', text: '오전 간식' },
+          { time: '12:00', icon: '🍚', text: '점심 식사' },
+          { time: '15:00', icon: '🍌', text: '오후 간식' },
+          { time: '18:00', icon: '🍚', text: '저녁 식사' },
+          { time: '21:00', icon: '🥛', text: '우유 (취침 전)' }
+        ]
+      };
+
+      const schedule = schedules[stage] || schedules.initial;
+      document.getElementById('daily-schedule').innerHTML = schedule.map(s =>
+        `<div class="schedule-item">
+          <div class="schedule-time">${s.time}</div>
+          <div class="schedule-content">${s.icon} ${s.text}</div>
+        </div>`
+      ).join('');
+    }
+
+    function renderSettingsInfo(s, monthAge) {
+      document.getElementById('settings-info').innerHTML = `
+        <div>👶 ${s.babyName} · 🎂 ${s.babyBirthday}</div>
+        <div style="color:var(--text-light);">${formatMonthAge(monthAge)}</div>
+      `;
+    }
+
+    function resetSetup() {
+      if (confirm('아기 정보를 다시 입력하시겠어요? (기록은 유지됩니다)')) {
+        const s = App.getSettings();
+        delete s.babyName;
+        delete s.babyBirthday;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+        location.href = 'index.html';
+      }
+    }
+  </script>
+</body>
+</html>
