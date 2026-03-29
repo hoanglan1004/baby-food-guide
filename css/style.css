@@ -141,7 +141,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .card-title {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -150,7 +150,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .card-subtitle {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--text-light);
   margin-bottom: 8px;
 }
