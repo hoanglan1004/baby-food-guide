@@ -608,7 +608,7 @@ const WEEKLY_PLANS = {
       { meals: [{ base: 'rice', side: 'carrot', extra: 'beef', amount: '죽5 + 당근2 + 소고기1.5' }] },
       { meals: [{ base: 'rice', side: 'sweet_potato', extra: 'beef', amount: '죽5 + 고구마2 + 소고기1' }] },
       { meals: [{ base: 'rice', side: 'zucchini', extra: 'beef', amount: '죽5 + 애호박2 + 소고기1.5' }] },
-      { meals: [{ base: 'rice', side: 'sweet_potato', amount: '죽5 + 고구마2 + 당근1' }] }
+      { meals: [{ base: 'rice', side: 'sweet_potato', extra: 'carrot', amount: '죽5 + 고구마2 + 당근1' }] }
     ],
     shopping: ['쌀가루', '고구마 1개', '소고기 100g', '당근', '애호박'],
     nutritionFocus: '5색 중 4색 달성 (흰+초록+빨강+노랑). 비타민A 강화'
