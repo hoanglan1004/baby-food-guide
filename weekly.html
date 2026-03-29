@@ -91,9 +91,10 @@
 
       titleEl.textContent = `${weekNum}주차 · ${plan.title}`;
 
-      // 장보기 목록
+      // 장보기 목록 (식단에서 자동 생성 + 하드코딩 보완)
       const shopEl = document.getElementById('shopping-items');
-      shopEl.innerHTML = plan.shopping.map(item => `<li>☑️ ${item}</li>`).join('');
+      const autoItems = generateShoppingList(plan);
+      shopEl.innerHTML = autoItems.map(item => `<li>☑️ ${item}</li>`).join('');
 
       // 5색 균형
       const colors = getColorBalance(plan);
