@@ -13,6 +13,20 @@
 </head>
 <body>
 
+  <!-- 폰트 크기 조절 -->
+  <div class="font-controls">
+    <button class="font-btn" id="font-toggle" onclick="FontControl.cycle()">가</button>
+  </div>
+
+  <!-- 이미지 라이트박스 -->
+  <div id="lightbox" class="lightbox">
+    <button class="lightbox-close" onclick="Lightbox.close()">✕</button>
+    <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); Lightbox.prev()">◀</button>
+    <img src="" alt="확대 이미지">
+    <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); Lightbox.next()">▶</button>
+    <div class="lightbox-counter"></div>
+  </div>
+
   <!-- 초기 설정 화면 -->
   <div id="setup-screen" class="setup-screen">
     <div style="font-size: 4rem;">🍚</div>
