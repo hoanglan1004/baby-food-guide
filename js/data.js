@@ -666,6 +666,118 @@ const WEEKLY_PLANS = {
     ],
     shopping: ['쌀가루', '달걀 4개', '소고기 100g', '브로콜리', '당근', '고구마', '사과', '애호박'],
     nutritionFocus: '🔑 달걀 = 철분+비타민D+단백질+지방 올인원! 5대 영양소 완성'
+  },
+
+  // ── 중기 이유식 (7~8개월) — 하루 2회, 7배죽, 3mm 입자 ──
+  middle_w1: {
+    stage: 'middle', week: 1,
+    title: '🐟 흰살생선 도입 — 두부와 함께',
+    desc: '7개월! 하루 2회로 늘어나요. 흰살생선과 두부로 단백질을 강화합니다.',
+    source: 'NotebookLM 소스 — 소아과 전문의 정유미',
+    newIngredients: ['white_fish', 'tofu'],
+    days: [
+      { meals: [{ base: 'rice', side: 'white_fish', amount: '죽60g + 생선10g', newItem: 'white_fish', newDay: 1 }, { base: 'rice', side: 'sweet_potato', extra: 'beef', amount: '죽60g + 고구마20g + 소고기15g' }] },
+      { meals: [{ base: 'rice', side: 'white_fish', amount: '죽60g + 생선10g', newItem: 'white_fish', newDay: 2 }, { base: 'rice', side: 'broccoli', extra: 'egg_yolk', amount: '죽60g + 브로콜리20g + 노른자1/2' }] },
+      { meals: [{ base: 'rice', side: 'white_fish', amount: '죽60g + 생선15g', newItem: 'white_fish', newDay: 3 }, { base: 'rice', side: 'carrot', extra: 'beef', amount: '죽60g + 당근20g + 소고기15g' }] },
+      { meals: [{ base: 'rice', side: 'tofu', amount: '죽60g + 두부20g', newItem: 'tofu', newDay: 1 }, { base: 'rice', side: 'zucchini', extra: 'white_fish', amount: '죽60g + 애호박20g + 생선15g' }] },
+      { meals: [{ base: 'rice', side: 'tofu', amount: '죽60g + 두부25g', newItem: 'tofu', newDay: 2 }, { base: 'rice', side: 'sweet_potato', extra: 'beef', amount: '죽60g + 고구마20g + 소고기15g' }] },
+      { meals: [{ base: 'rice', side: 'tofu', extra: 'carrot', amount: '죽60g + 두부25g + 당근15g', newItem: 'tofu', newDay: 3 }, { base: 'rice', side: 'broccoli', extra: 'egg_yolk', amount: '죽60g + 브로콜리20g + 노른자1/2' }] },
+      { meals: [{ base: 'rice', side: 'white_fish', extra: 'zucchini', amount: '죽70g + 생선15g + 애호박15g' }, { base: 'rice', side: 'tofu', extra: 'carrot', amount: '죽70g + 두부20g + 당근15g' }] }
+    ],
+    shopping: ['쌀', '대구(흰살생선) 150g', '두부 1모', '소고기 100g', '달걀', '브로콜리', '당근', '애호박', '고구마'],
+    nutritionFocus: '단백질 3종(소고기+생선+두부) 순환! 5대 식품군 완성'
+  },
+  middle_w2: {
+    stage: 'middle', week: 2,
+    title: '🥬 시금치 + 요거트 — 철분과 칼슘',
+    desc: '시금치로 식물성 철분, 요거트로 칼슘을 보충합니다.',
+    source: '대한소아청소년과학회 — 철분+칼슘 동시 보충',
+    newIngredients: ['spinach', 'yogurt'],
+    days: [
+      { meals: [{ base: 'rice', side: 'spinach', extra: 'beef', amount: '죽70g + 시금치15g + 소고기15g', newItem: 'spinach', newDay: 1 }, { base: 'rice', side: 'tofu', extra: 'carrot', amount: '죽70g + 두부20g + 당근15g' }] },
+      { meals: [{ base: 'rice', side: 'spinach', extra: 'egg_yolk', amount: '죽70g + 시금치15g + 노른자1/2', newItem: 'spinach', newDay: 2 }, { base: 'rice', side: 'white_fish', extra: 'zucchini', amount: '죽70g + 생선15g + 애호박20g' }] },
+      { meals: [{ base: 'rice', side: 'spinach', extra: 'beef', amount: '죽70g + 시금치20g + 소고기15g', newItem: 'spinach', newDay: 3 }, { base: 'rice', side: 'sweet_potato', extra: 'apple', amount: '죽70g + 고구마20g + 사과15g' }] },
+      { meals: [{ base: 'yogurt', side: 'banana', amount: '요거트30g + 바나나20g', newItem: 'yogurt', newDay: 1 }, { base: 'rice', side: 'broccoli', extra: 'beef', amount: '죽70g + 브로콜리20g + 소고기20g' }] },
+      { meals: [{ base: 'yogurt', side: 'apple', amount: '요거트30g + 사과퓨레20g', newItem: 'yogurt', newDay: 2 }, { base: 'rice', side: 'spinach', extra: 'white_fish', amount: '죽70g + 시금치15g + 생선15g' }] },
+      { meals: [{ base: 'yogurt', side: 'banana', amount: '요거트40g + 바나나20g', newItem: 'yogurt', newDay: 3 }, { base: 'rice', side: 'carrot', extra: 'tofu', amount: '죽70g + 당근20g + 두부20g' }] },
+      { meals: [{ base: 'rice', side: 'spinach', extra: 'beef', amount: '죽80g + 시금치20g + 소고기20g' }, { base: 'yogurt', side: 'sweet_potato', amount: '요거트40g + 고구마퓨레20g' }] }
+    ],
+    shopping: ['쌀', '시금치 1단', '플레인 요거트(무가당)', '소고기 150g', '대구 100g', '두부', '달걀', '바나나', '사과', '브로콜리', '당근', '애호박', '고구마'],
+    nutritionFocus: '철분(시금치+소고기) + 칼슘(요거트) 강화. 5색 중 보라만 남음'
+  },
+  middle_w3: {
+    stage: 'middle', week: 3,
+    title: '🟣 보라색 완성 — 비트 + 완두콩',
+    desc: '비트로 보라색을 채우고, 완두콩으로 식물성 단백질을 추가합니다. 5색 완성!',
+    source: 'WHO — 다양한 색상의 식재료 권장',
+    newIngredients: ['beet', 'pea'],
+    days: [
+      { meals: [{ base: 'rice', side: 'beet', extra: 'beef', amount: '죽70g + 비트10g + 소고기15g', newItem: 'beet', newDay: 1 }, { base: 'rice', side: 'spinach', extra: 'tofu', amount: '죽70g + 시금치15g + 두부20g' }] },
+      { meals: [{ base: 'rice', side: 'beet', extra: 'egg_yolk', amount: '죽70g + 비트10g + 노른자1/2', newItem: 'beet', newDay: 2 }, { base: 'rice', side: 'carrot', extra: 'white_fish', amount: '죽70g + 당근20g + 생선15g' }] },
+      { meals: [{ base: 'rice', side: 'beet', extra: 'beef', amount: '죽70g + 비트15g + 소고기20g', newItem: 'beet', newDay: 3 }, { base: 'yogurt', side: 'banana', amount: '요거트40g + 바나나20g' }] },
+      { meals: [{ base: 'rice', side: 'pea', extra: 'beef', amount: '죽70g + 완두콩15g + 소고기15g', newItem: 'pea', newDay: 1 }, { base: 'rice', side: 'broccoli', extra: 'tofu', amount: '죽70g + 브로콜리20g + 두부20g' }] },
+      { meals: [{ base: 'rice', side: 'pea', extra: 'carrot', amount: '죽70g + 완두콩15g + 당근15g', newItem: 'pea', newDay: 2 }, { base: 'rice', side: 'sweet_potato', extra: 'white_fish', amount: '죽70g + 고구마20g + 생선15g' }] },
+      { meals: [{ base: 'rice', side: 'pea', extra: 'spinach', amount: '죽80g + 완두콩20g + 시금치15g', newItem: 'pea', newDay: 3 }, { base: 'yogurt', side: 'apple', amount: '요거트40g + 사과퓨레20g' }] },
+      { meals: [{ base: 'rice', side: 'beet', extra: 'beef', amount: '죽80g + 비트15g + 소고기20g' }, { base: 'rice', side: 'pea', extra: 'tofu', amount: '죽80g + 완두콩15g + 두부20g' }] }
+    ],
+    shopping: ['쌀', '비트 1개', '완두콩(냉동 OK)', '소고기 150g', '대구 100g', '두부', '달걀', '시금치', '브로콜리', '당근', '고구마', '바나나', '사과', '요거트'],
+    nutritionFocus: '🎨 5색 완성! 빨(당근)+초(시금치)+노(고구마)+흰(쌀)+보라(비트)'
+  },
+  middle_w4: {
+    stage: 'middle', week: 4,
+    title: '🍄 버섯 + 양배추 — 면역력 강화',
+    desc: '표고버섯으로 비타민D, 양배추로 비타민C를 보충합니다.',
+    source: '대한소아청소년과학회',
+    newIngredients: ['mushroom', 'cabbage'],
+    days: [
+      { meals: [{ base: 'rice', side: 'mushroom', extra: 'beef', amount: '죽80g + 버섯10g + 소고기20g', newItem: 'mushroom', newDay: 1 }, { base: 'rice', side: 'spinach', extra: 'tofu', amount: '죽80g + 시금치15g + 두부20g' }] },
+      { meals: [{ base: 'rice', side: 'mushroom', extra: 'carrot', amount: '죽80g + 버섯10g + 당근15g', newItem: 'mushroom', newDay: 2 }, { base: 'yogurt', side: 'banana', amount: '요거트50g + 바나나20g' }] },
+      { meals: [{ base: 'rice', side: 'mushroom', extra: 'white_fish', amount: '죽80g + 버섯15g + 생선15g', newItem: 'mushroom', newDay: 3 }, { base: 'rice', side: 'beet', extra: 'egg_yolk', amount: '죽80g + 비트10g + 노른자1/2' }] },
+      { meals: [{ base: 'rice', side: 'cabbage', extra: 'beef', amount: '죽80g + 양배추15g + 소고기20g', newItem: 'cabbage', newDay: 1 }, { base: 'rice', side: 'pea', extra: 'tofu', amount: '죽80g + 완두콩15g + 두부20g' }] },
+      { meals: [{ base: 'rice', side: 'cabbage', extra: 'white_fish', amount: '죽80g + 양배추15g + 생선15g', newItem: 'cabbage', newDay: 2 }, { base: 'rice', side: 'sweet_potato', extra: 'apple', amount: '죽80g + 고구마20g + 사과15g' }] },
+      { meals: [{ base: 'rice', side: 'cabbage', extra: 'egg_yolk', amount: '죽80g + 양배추20g + 노른자1/2', newItem: 'cabbage', newDay: 3 }, { base: 'rice', side: 'broccoli', extra: 'beef', amount: '죽80g + 브로콜리20g + 소고기20g' }] },
+      { meals: [{ base: 'rice', side: 'mushroom', extra: 'beef', amount: '죽80g + 버섯15g + 소고기20g' }, { base: 'rice', side: 'cabbage', extra: 'tofu', amount: '죽80g + 양배추20g + 두부25g' }] }
+    ],
+    shopping: ['쌀', '표고버섯 4개', '양배추 1/4통', '소고기 200g', '대구 100g', '두부', '달걀', '시금치', '브로콜리', '당근', '고구마', '바나나', '사과', '요거트', '비트', '완두콩'],
+    nutritionFocus: '비타민D(버섯) + 비타민C(양배추). 면역력 강화 주간'
+  },
+
+  // ── 후기 이유식 (9~11개월) — 하루 3회, 5배죽, 5mm 덩어리 ──
+  late_w1: {
+    stage: 'late', week: 1,
+    title: '🥓 돼지고기 + 연어 — 단백질 다양화',
+    desc: '9개월! 하루 3회. 돼지고기와 연어로 단백질 종류를 넓힙니다.',
+    source: 'NotebookLM 소스 — 소아과 전문의',
+    newIngredients: ['pork', 'salmon'],
+    days: [
+      { meals: [{ base: 'rice', side: 'pork', extra: 'carrot', amount: '진밥100g + 돼지고기20g + 당근20g', newItem: 'pork', newDay: 1 }, { base: 'rice', side: 'tofu', extra: 'spinach', amount: '진밥100g + 두부25g + 시금치15g' }, { base: 'yogurt', side: 'banana', amount: '요거트50g + 바나나' }] },
+      { meals: [{ base: 'rice', side: 'pork', extra: 'broccoli', amount: '진밥100g + 돼지고기20g + 브로콜리20g', newItem: 'pork', newDay: 2 }, { base: 'rice', side: 'white_fish', extra: 'zucchini', amount: '진밥100g + 생선15g + 애호박20g' }, { base: 'rice', side: 'apple', amount: '사과 30g' }] },
+      { meals: [{ base: 'rice', side: 'pork', extra: 'cabbage', amount: '진밥100g + 돼지고기25g + 양배추20g', newItem: 'pork', newDay: 3 }, { base: 'rice', side: 'egg_yolk', extra: 'sweet_potato', amount: '진밥100g + 전란1/2 + 고구마20g' }, { base: 'yogurt', side: 'pear', amount: '요거트50g + 배' }] },
+      { meals: [{ base: 'rice', side: 'salmon', extra: 'spinach', amount: '진밥100g + 연어15g + 시금치15g', newItem: 'salmon', newDay: 1 }, { base: 'rice', side: 'beef', extra: 'carrot', amount: '진밥100g + 소고기20g + 당근20g' }, { base: 'rice', side: 'banana', amount: '바나나 30g' }] },
+      { meals: [{ base: 'rice', side: 'salmon', extra: 'broccoli', amount: '진밥100g + 연어15g + 브로콜리20g', newItem: 'salmon', newDay: 2 }, { base: 'rice', side: 'tofu', extra: 'mushroom', amount: '진밥100g + 두부25g + 버섯15g' }, { base: 'yogurt', side: 'apple', amount: '요거트50g + 사과' }] },
+      { meals: [{ base: 'rice', side: 'salmon', extra: 'pea', amount: '진밥100g + 연어20g + 완두콩15g', newItem: 'salmon', newDay: 3 }, { base: 'rice', side: 'pork', extra: 'zucchini', amount: '진밥100g + 돼지고기20g + 애호박20g' }, { base: 'rice', side: 'sweet_potato', amount: '고구마 30g' }] },
+      { meals: [{ base: 'rice', side: 'beef', extra: 'beet', amount: '진밥110g + 소고기25g + 비트10g' }, { base: 'rice', side: 'salmon', extra: 'cabbage', amount: '진밥110g + 연어20g + 양배추20g' }, { base: 'yogurt', side: 'banana', amount: '요거트50g + 바나나' }] }
+    ],
+    shopping: ['쌀', '돼지고기(안심) 200g', '연어 150g', '소고기 150g', '대구 100g', '두부', '달걀', '시금치', '브로콜리', '당근', '양배추', '애호박', '고구마', '버섯', '완두콩', '비트', '바나나', '사과', '배', '요거트'],
+    nutritionFocus: '단백질 5종 순환(소·돼지·생선·두부·달걀). 오메가3(연어) 추가'
+  },
+  late_w2: {
+    stage: 'late', week: 2,
+    title: '🦐 새우 도입 + 핑거푸드 시작',
+    desc: '새우를 소량 시도하고, 핑거푸드(부드러운 스틱)를 시작합니다.',
+    source: 'NotebookLM 소스 — AAP + 핑거푸드 가이드',
+    newIngredients: ['shrimp'],
+    days: [
+      { meals: [{ base: 'rice', side: 'shrimp', extra: 'carrot', amount: '진밥100g + 새우10g + 당근20g', newItem: 'shrimp', newDay: 1 }, { base: 'rice', side: 'beef', extra: 'spinach', amount: '진밥100g + 소고기25g + 시금치15g' }, { base: 'yogurt', side: 'banana', amount: '요거트50g + 바나나' }] },
+      { meals: [{ base: 'rice', side: 'shrimp', extra: 'broccoli', amount: '진밥100g + 새우10g + 브로콜리20g', newItem: 'shrimp', newDay: 2 }, { base: 'rice', side: 'salmon', extra: 'cabbage', amount: '진밥100g + 연어20g + 양배추20g' }, { base: 'rice', side: 'pear', amount: '배 30g' }] },
+      { meals: [{ base: 'rice', side: 'shrimp', extra: 'zucchini', amount: '진밥100g + 새우15g + 애호박20g', newItem: 'shrimp', newDay: 3 }, { base: 'rice', side: 'pork', extra: 'mushroom', amount: '진밥100g + 돼지고기20g + 버섯15g' }, { base: 'yogurt', side: 'apple', amount: '요거트50g + 사과' }] },
+      { meals: [{ base: 'rice', side: 'beef', extra: 'pea', amount: '진밥110g + 소고기25g + 완두콩15g' }, { base: 'rice', side: 'tofu', extra: 'carrot', amount: '진밥110g + 두부25g + 당근20g' }, { base: 'rice', side: 'banana', amount: '바나나 핑거푸드' }] },
+      { meals: [{ base: 'rice', side: 'salmon', extra: 'spinach', amount: '진밥110g + 연어20g + 시금치15g' }, { base: 'rice', side: 'pork', extra: 'sweet_potato', amount: '진밥110g + 돼지고기25g + 고구마20g' }, { base: 'yogurt', side: 'avocado', amount: '요거트50g + 아보카도' }] },
+      { meals: [{ base: 'rice', side: 'white_fish', extra: 'beet', amount: '진밥110g + 생선15g + 비트10g' }, { base: 'rice', side: 'beef', extra: 'broccoli', amount: '진밥110g + 소고기25g + 브로콜리20g' }, { base: 'rice', side: 'apple', amount: '사과 핑거푸드' }] },
+      { meals: [{ base: 'rice', side: 'shrimp', extra: 'tofu', amount: '진밥110g + 새우15g + 두부20g' }, { base: 'rice', side: 'pork', extra: 'cabbage', amount: '진밥110g + 돼지고기25g + 양배추20g' }, { base: 'yogurt', side: 'banana', amount: '요거트50g + 바나나' }] }
+    ],
+    shopping: ['쌀', '새우(껍질 벗긴 것) 100g', '소고기 200g', '돼지고기 150g', '연어 100g', '대구 100g', '두부', '달걀', '시금치', '브로콜리', '당근', '양배추', '애호박', '고구마', '버섯', '완두콩', '비트', '바나나', '사과', '배', '아보카도', '요거트'],
+    nutritionFocus: '갑각류(새우) 안전 도입 + 핑거푸드로 자기주도 식사 시작'
   }
 };
 
