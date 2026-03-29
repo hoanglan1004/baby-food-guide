@@ -281,7 +281,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 }
 
 .shopping-list h3 {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -290,8 +290,8 @@ a { color: var(--primary-dark); text-decoration: none; }
 
 .shopping-list li {
   list-style: none;
-  padding: 4px 0;
-  font-size: 0.85rem;
+  padding: 5px 0;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 6px;
