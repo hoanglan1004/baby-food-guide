@@ -247,3 +247,107 @@ function mealToText(meal) {
   }
   return parts.join(' + ');
 }
+
+// ─── 폰트 크기 조절 ──────────────────────────────
+const FontControl = {
+  sizes: ['', 'font-large', 'font-xlarge'],
+  labels: ['가', '가+', '가++'],
+
+  init() {
+    const saved = localStorage.getItem('hayun_fontsize') || 0;
+    this.current = parseInt(saved);
+    this.apply();
+    this.render();
+  },
+
+  apply() {
+    document.documentElement.classList.remove('font-large', 'font-xlarge');
+    if (this.sizes[this.current]) {
+      document.documentElement.classList.add(this.sizes[this.current]);
+    }
+  },
+
+  cycle() {
+    this.current = (this.current + 1) % this.sizes.length;
+    localStorage.setItem('hayun_fontsize', this.current);
+    this.apply();
+    this.render();
+  },
+
+  render() {
+    const btn = document.getElementById('font-toggle');
+    if (btn) btn.textContent = this.labels[this.current];
+  }
+};
+
+// ─── 이미지 라이트박스 ──────────────────────────────
+const Lightbox = {
+  el: null,
+  imgEl: null,
+  counterEl: null,
+  images: [],
+  idx: 0,
+
+  init() {
+    this.el = document.getElementById('lightbox');
+    if (!this.el) return;
+    this.imgEl = this.el.querySelector('img');
+    this.counterEl = this.el.querySelector('.lightbox-counter');
+
+    this.el.addEventListener('click', (e) => {
+      if (e.target === this.el || e.target.classList.contains('lightbox-close')) {
+        this.close();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!this.el.classList.contains('open')) return;
+      if (e.key === 'Escape') this.close();
+      if (e.key === 'ArrowRight') this.next();
+      if (e.key === 'ArrowLeft') this.prev();
+    });
+  },
+
+  open(src, group) {
+    if (group) {
+      this.images = group;
+      this.idx = group.indexOf(src);
+      if (this.idx < 0) this.idx = 0;
+    } else {
+      this.images = [src];
+      this.idx = 0;
+    }
+    this.show();
+  },
+
+  show() {
+    this.imgEl.src = this.images[this.idx];
+    this.counterEl.textContent =
+      this.images.length > 1 ? `${this.idx + 1} / ${this.images.length}` : '';
+    this.el.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  },
+
+  close() {
+    this.el.classList.remove('open');
+    document.body.style.overflow = '';
+  },
+
+  next() {
+    if (this.images.length <= 1) return;
+    this.idx = (this.idx + 1) % this.images.length;
+    this.show();
+  },
+
+  prev() {
+    if (this.images.length <= 1) return;
+    this.idx = (this.idx - 1 + this.images.length) % this.images.length;
+    this.show();
+  }
+};
+
+// ─── 페이지 로드 시 초기화 ──────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  FontControl.init();
+  Lightbox.init();
+});
