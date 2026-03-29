@@ -496,6 +496,33 @@
           }
         });
       });
+
+      // 슬라이드 이미지 클릭 → 라이트박스 (해당 세트 전체 탐색 가능)
+      document.querySelectorAll('.slide-img').forEach(img => {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', () => {
+          const section = img.closest('.slide-section');
+          const folder = section.dataset.folder;
+          const count = parseInt(section.dataset.count);
+          const current = parseInt(section.dataset.current);
+          const images = [];
+          for (let i = 1; i <= count; i++) {
+            images.push(`assets/${folder}/slide-${String(i).padStart(2, '0')}.jpg`);
+          }
+          Lightbox.open(images[current - 1], images);
+        });
+      });
+
+      // 인포그래픽 이미지 클릭 → 라이트박스
+      document.querySelectorAll('.card img[src*="infographics"]').forEach(img => {
+        img.style.cursor = 'zoom-in';
+        img.removeAttribute('onclick');
+        img.addEventListener('click', () => {
+          const allInfoImgs = [...document.querySelectorAll('.card img[src*="infographics"]')];
+          const srcs = allInfoImgs.map(i => i.src);
+          Lightbox.open(img.src, srcs);
+        });
+      });
     });
 
     document.addEventListener('DOMContentLoaded', () => {
