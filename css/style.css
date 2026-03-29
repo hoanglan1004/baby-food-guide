@@ -652,7 +652,7 @@ a { color: var(--primary-dark); text-decoration: none; }
 
 /* ─── 섹션 타이틀 ─── */
 .section-title {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-light);
   margin: 20px 0 12px;
