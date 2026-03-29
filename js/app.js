@@ -68,8 +68,16 @@ const App = {
 
   /** 현재 주차에 맞는 식단 템플릿 가져오기 */
   getCurrentPlan(weekNum) {
-    const planKey = `initial_w${weekNum}`;
-    return WEEKLY_PLANS[planKey] || null;
+    // 초기(1~8주) → 중기(9~12주) → 후기(13~14주)
+    let planKey;
+    if (weekNum <= 8) {
+      planKey = `initial_w${weekNum}`;
+    } else if (weekNum <= 12) {
+      planKey = `middle_w${weekNum - 8}`;
+    } else if (weekNum <= 14) {
+      planKey = `late_w${weekNum - 12}`;
+    }
+    return planKey ? (WEEKLY_PLANS[planKey] || null) : null;
   },
 
   /** 오늘 요일 인덱스 (0=월, 6=일) */
