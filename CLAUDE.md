@@ -14,14 +14,25 @@ baby-food-guide/
 ├── weekly.html             ← 주간 식단표 + 장보기 목록
 ├── ingredients.html        ← 식재료 사전 (카테고리/검색)
 ├── journal.html            ← 이유식 일지 (달력 + 기록)
-├── guide.html              ← 단계별 가이드 (농도/크기/스케줄)
+├── guide.html              ← 전문가 학습관 + 단계별 가이드
+├── recipes.html            ← 이유식 레시피 (초기/중기/후기 9개)
 ├── css/style.css           ← 모바일 우선 스타일 (CSS 변수 테마)
 ├── js/
-│   ├── data.js             ← 핵심! 식재료 DB + 주간 식단 템플릿 (8주분)
-│   ├── app.js              ← 월령 계산, 식단 엔진, 일지 CRUD
+│   ├── data.js             ← 핵심! 식재료 33개 + 식단 14주분 + 레시피 9개
+│   ├── app.js              ← 월령 계산, 식단 엔진(초기→중기→후기 자동 전환), 일지 CRUD
 │   └── sw-register.js      ← Service Worker 등록
-├── sw.js                   ← 오프라인 캐싱
+├── sw.js                   ← 오프라인 캐싱 (v3)
 ├── manifest.json           ← PWA 매니페스트
+├── bot/
+│   ├── memory.json         ← 하윤이 성장 메모리 (반응, 선호도, 자기 복기)
+│   ├── hayun-expert.md     ← 봇 두뇌 (Skill 파일)
+│   └── start-bot.sh        ← tmux 봇 시작 스크립트
+├── assets/
+│   ├── slides*/            ← NotebookLM 슬라이드 10세트 (131장)
+│   ├── infographics/       ← 인포그래픽 3장
+│   ├── audio/              ← 오디오 가이드 9편
+│   └── video/              ← 동영상 가이드 4편
+├── icons/                  ← PWA 아이콘 (192px, 512px)
 └── docs/                   ← PDCA 문서
 ```
 
