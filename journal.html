@@ -53,6 +53,62 @@
         <div id="day-detail-content">
           <p style="color:var(--text-light); font-size:0.85rem;">달력에서 날짜를 터치하면 그날의 기록을 볼 수 있어요</p>
         </div>
+        <div id="add-btn-area" style="display:none; margin-top:12px; text-align:center;">
+          <button onclick="openRecordForm()" style="width:100%; padding:14px; border:2px dashed var(--primary); border-radius:var(--radius-sm); background:var(--bg); color:var(--primary-dark); font-size:0.95rem; font-weight:600; cursor:pointer;">
+            ➕ 기록 추가
+          </button>
+        </div>
+      </div>
+
+      <!-- 기록 추가 바텀시트 모달 -->
+      <div id="record-modal" class="detail-panel" style="display:none;" onclick="if(event.target===this) closeRecordForm()">
+        <div class="detail-content">
+          <div class="detail-close"></div>
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:16px;">🍽️ 이유식 기록</h3>
+
+          <!-- 식재료 선택 -->
+          <div class="form-group">
+            <label>식재료 선택</label>
+            <input type="text" id="ing-search" placeholder="식재료 이름 검색..." oninput="filterIngredients()" autocomplete="off" style="margin-bottom:8px;">
+            <div id="ing-list" style="max-height:180px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg);"></div>
+            <div id="ing-selected" style="margin-top:8px; display:none; padding:10px 14px; background:var(--primary-light); border-radius:var(--radius-sm); font-weight:600; display:none;">
+            </div>
+          </div>
+
+          <!-- 양 입력 -->
+          <div class="form-group">
+            <label>먹인 양</label>
+            <input type="text" id="record-amount" placeholder="예: 2숟가락, 50ml">
+          </div>
+
+          <!-- 반응 선택 -->
+          <div class="form-group">
+            <label>반응</label>
+            <div class="reaction-buttons" id="reaction-btns">
+              <button type="button" class="reaction-btn" data-reaction="good" onclick="selectReaction('good')">
+                <span class="emoji">😋</span>잘먹음
+              </button>
+              <button type="button" class="reaction-btn" data-reaction="okay" onclick="selectReaction('okay')">
+                <span class="emoji">😐</span>보통
+              </button>
+              <button type="button" class="reaction-btn" data-reaction="refuse" onclick="selectReaction('refuse')">
+                <span class="emoji">🙅</span>거부
+              </button>
+              <button type="button" class="reaction-btn" data-reaction="allergy" onclick="selectReaction('allergy')">
+                <span class="emoji">🚨</span>알레르기
+              </button>
+            </div>
+          </div>
+
+          <!-- 메모 -->
+          <div class="form-group">
+            <label>메모 (선택)</label>
+            <input type="text" id="record-memo" placeholder="예: 두드러기 없음, 잘 삼킴">
+          </div>
+
+          <!-- 저장 버튼 -->
+          <button class="btn-primary" onclick="saveRecord()">💾 저장하기</button>
+        </div>
       </div>
 
       <!-- 시도한 식재료 현황 -->
