@@ -153,6 +153,8 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       if (!App.isSetupDone()) { location.href = 'index.html'; return; }
+      // 일지에 없는 식재료 현황 자동 정리
+      cleanupTriedIngredients();
       const now = new Date();
       currentYear = now.getFullYear();
       currentMonth = now.getMonth();
@@ -161,6 +163,24 @@
       // 오늘 자동 선택
       selectDay(Journal.todayStr());
     });
+
+    /** 일지에 기록이 없는데 triedIngredients에 남은 항목 제거 */
+    function cleanupTriedIngredients() {
+      const s = App.getSettings();
+      if (!s || !s.triedIngredients) return;
+      const journal = s.journal || {};
+      let changed = false;
+      for (const ingId of Object.keys(s.triedIngredients)) {
+        const hasEntry = Object.values(journal).some(day =>
+          day.meals && day.meals.some(m => m.ingredient === ingId)
+        );
+        if (!hasEntry) {
+          delete s.triedIngredients[ingId];
+          changed = true;
+        }
+      }
+      if (changed) App.saveSettings(s);
+    }
 
     function changeMonth(delta) {
       currentMonth += delta;
