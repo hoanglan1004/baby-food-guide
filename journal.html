@@ -205,12 +205,20 @@
       grid.innerHTML = html;
     }
 
+    let selectedDate = null;
+    let selectedIngredient = null;
+    let selectedReaction = null;
+
     function selectDay(dateStr) {
+      selectedDate = dateStr;
       const titleEl = document.getElementById('day-detail-title');
       const contentEl = document.getElementById('day-detail-content');
 
       const date = new Date(dateStr + 'T00:00:00');
       titleEl.textContent = `📅 ${formatDate(date)}`;
+
+      // 기록 추가 버튼 항상 표시
+      document.getElementById('add-btn-area').style.display = 'block';
 
       const entry = Journal.getDay(dateStr);
       if (!entry || entry.meals.length === 0) {
@@ -236,6 +244,7 @@
               <div class="entry-amount">${m.amount}</div>
             </div>
             <div style="font-size:0.8rem;">${r.emoji} ${r.text}</div>
+            <button onclick="deleteRecord('${dateStr}','${m.ingredient}')" style="border:none; background:none; font-size:1rem; cursor:pointer; padding:4px;">🗑️</button>
           </div>
         `;
       }).join('');
@@ -243,6 +252,106 @@
       if (entry.memo) {
         contentEl.innerHTML += `<div style="margin-top:8px; padding:8px 12px; background:var(--bg); border-radius:8px; font-size:0.8rem;">📝 ${entry.memo}</div>`;
       }
+    }
+
+    // ─── 기록 추가 폼 ───
+    function openRecordForm() {
+      selectedIngredient = null;
+      selectedReaction = null;
+      document.getElementById('ing-search').value = '';
+      document.getElementById('record-amount').value = '';
+      document.getElementById('record-memo').value = '';
+      document.getElementById('ing-selected').style.display = 'none';
+      document.querySelectorAll('#reaction-btns .reaction-btn').forEach(b => b.classList.remove('selected'));
+      filterIngredients();
+      document.getElementById('record-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRecordForm() {
+      document.getElementById('record-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function filterIngredients() {
+      const query = document.getElementById('ing-search').value.toLowerCase();
+      const settings = App.getSettings();
+      const monthAge = settings ? App.getMonthAge(settings.babyBirthday) : 6;
+      const available = App.getAvailableIngredients(monthAge);
+
+      const filtered = query
+        ? available.filter(i => i.name.includes(query))
+        : available;
+
+      const listEl = document.getElementById('ing-list');
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<p style="padding:12px; font-size:0.85rem; color:var(--text-muted);">검색 결과 없음</p>';
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(i => `
+        <div onclick="pickIngredient('${i.id}')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; align-items:center; gap:8px;">
+          <span>${i.emoji}</span>
+          <span>${i.name}</span>
+          <span style="margin-left:auto; font-size:0.75rem; color:var(--text-muted);">${i.category === 'grain' ? '곡류' : i.category === 'vegetable' ? '채소' : i.category === 'fruit' ? '과일' : i.category === 'protein' ? '단백질' : '유제품'}</span>
+        </div>
+      `).join('');
+    }
+
+    function pickIngredient(id) {
+      const ing = App.getIngredient(id);
+      if (!ing) return;
+      selectedIngredient = ing;
+      document.getElementById('ing-selected').style.display = 'block';
+      document.getElementById('ing-selected').textContent = `${ing.emoji} ${ing.name}`;
+      document.getElementById('ing-list').innerHTML = '';
+      document.getElementById('ing-search').value = '';
+
+      // 현재 단계에 맞는 기본 양 표시
+      const settings = App.getSettings();
+      const monthAge = settings ? App.getMonthAge(settings.babyBirthday) : 6;
+      const stage = App.getCurrentStage(monthAge);
+      if (ing.stages && ing.stages[stage]) {
+        document.getElementById('record-amount').placeholder = ing.stages[stage].amount;
+      }
+    }
+
+    function selectReaction(reaction) {
+      selectedReaction = reaction;
+      document.querySelectorAll('#reaction-btns .reaction-btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.reaction === reaction);
+      });
+    }
+
+    function saveRecord() {
+      if (!selectedDate) { alert('날짜를 먼저 선택해주세요'); return; }
+      if (!selectedIngredient) { alert('식재료를 선택해주세요'); return; }
+      if (!selectedReaction) { alert('반응을 선택해주세요'); return; }
+
+      const amount = document.getElementById('record-amount').value || document.getElementById('record-amount').placeholder;
+      const memo = document.getElementById('record-memo').value;
+
+      Journal.saveReaction(
+        selectedDate,
+        selectedIngredient.id,
+        selectedIngredient.name,
+        amount,
+        selectedReaction,
+        memo
+      );
+
+      closeRecordForm();
+      selectDay(selectedDate);
+      renderCalendar();
+      renderTriedSummary();
+    }
+
+    function deleteRecord(dateStr, ingredientId) {
+      if (!confirm('이 기록을 삭제할까요?')) return;
+      Journal.deleteEntry(dateStr, ingredientId);
+      selectDay(dateStr);
+      renderCalendar();
+      renderTriedSummary();
     }
 
     function renderTriedSummary() {
