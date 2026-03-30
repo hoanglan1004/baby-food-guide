@@ -299,12 +299,10 @@
     }
 
     function renderIngredientList() {
-      const settings = App.getSettings();
-      const monthAge = settings ? App.getMonthAge(settings.babyBirthday) : 6;
-      const available = App.getAvailableIngredients(monthAge);
+      // 일지는 실제 먹인 기록이므로 월령 제한 없이 전체 식재료 표시
       const filtered = currentCat === 'all'
-        ? available
-        : available.filter(i => i.category === currentCat);
+        ? INGREDIENTS
+        : INGREDIENTS.filter(i => i.category === currentCat);
 
       const listEl = document.getElementById('ing-list');
       if (filtered.length === 0) {
