@@ -7,7 +7,7 @@
 # bkit이 있는 baby-food-guide/ 에서 실행하면 시스템 프롬프트만 160k+ 소모
 # workspace에는 경량 CLAUDE.md만 있어 컨텍스트를 대화에 집중
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$HOME/.cargo/bin"
+export PATH="$HOME/.bun/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$HOME/.cargo/bin"
 
 PROJECT_DIR="/Users/yoonminho/baby-food-guide"
 LOG_FILE="$PROJECT_DIR/data/hayun-bot-session.log"
