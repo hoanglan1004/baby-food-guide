@@ -122,7 +122,7 @@ const Journal = {
   },
 
   /** 반응 기록 저장 */
-  saveReaction(dateStr, ingredientId, ingredientName, amount, reaction) {
+  saveReaction(dateStr, ingredientId, ingredientName, amount, reaction, memo) {
     const s = App.getSettings() || {};
     if (!s.journal) s.journal = {};
     if (!s.journal[dateStr]) s.journal[dateStr] = { meals: [] };
@@ -138,6 +138,11 @@ const Journal = {
       s.journal[dateStr].meals.push(entry);
     }
 
+    // 메모 저장
+    if (memo && memo.trim()) {
+      s.journal[dateStr].memo = memo.trim();
+    }
+
     // 시도한 식재료 현황 업데이트
     if (!s.triedIngredients) s.triedIngredients = {};
     if (!s.triedIngredients[ingredientId]) {
@@ -150,6 +155,18 @@ const Journal = {
     s.triedIngredients[ingredientId].tryCount++;
     s.triedIngredients[ingredientId].lastReaction = reaction;
 
+    App.saveSettings(s);
+  },
+
+  /** 기록 삭제 */
+  deleteEntry(dateStr, ingredientId) {
+    const s = App.getSettings() || {};
+    if (!s.journal || !s.journal[dateStr]) return;
+    s.journal[dateStr].meals = s.journal[dateStr].meals
+      .filter(m => m.ingredient !== ingredientId);
+    if (s.journal[dateStr].meals.length === 0) {
+      delete s.journal[dateStr];
+    }
     App.saveSettings(s);
   },
 
