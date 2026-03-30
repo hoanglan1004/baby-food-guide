@@ -8,13 +8,12 @@
 # workspace에는 경량 CLAUDE.md만 있어 컨텍스트를 대화에 집중
 
 PROJECT_DIR="/Users/yoonminho/baby-food-guide"
-BOT_WORKSPACE="$PROJECT_DIR/bot/workspace"
 LOG_FILE="$PROJECT_DIR/data/hayun-bot-session.log"
 
 # 하윤 영양사 전용 텔레그램 채널 (CIO와 독립)
 export TELEGRAM_STATE_DIR="$HOME/.claude/channels/telegram-hayun"
 
-cd "$BOT_WORKSPACE"
+cd "$PROJECT_DIR"
 mkdir -p "$PROJECT_DIR/data"
 
 log() {
