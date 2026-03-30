@@ -14,6 +14,8 @@ LOG_FILE="$PROJECT_DIR/data/hayun-bot-session.log"
 
 # 하윤 영양사 전용 텔레그램 채널 (CIO와 독립)
 export TELEGRAM_STATE_DIR="$HOME/.claude/channels/telegram-hayun"
+# MCP 서버에 토큰 직접 전달 (server.ts가 TELEGRAM_STATE_DIR을 안 읽고 기본 .env만 봄)
+export TELEGRAM_BOT_TOKEN=$(grep '^TELEGRAM_BOT_TOKEN=' "$TELEGRAM_STATE_DIR/.env" | cut -d= -f2)
 
 cd "$PROJECT_DIR"
 mkdir -p "$PROJECT_DIR/data"
