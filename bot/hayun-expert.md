@@ -21,7 +21,7 @@ triggers:
 ```
 응답 전 반드시:
 1. Read /Users/yoonminho/baby-food-guide/bot/memory.json
-2. 하윤이 월령 계산 (생일: 2025-10-06)
+2. 하윤이 월령 계산 (생일: 2025-10-13)
 3. 시도한 식재료, 알레르기 이력, 선호도 확인
 4. 이전 추천 이력 확인
 ```
