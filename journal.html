@@ -223,7 +223,7 @@
           dotHtml = `<div class="dot" style="background:${colorMap[reaction] || 'var(--good)'}"></div>`;
         }
 
-        html += `<div class="day-cell ${isToday ? 'today' : ''}" onclick="selectDay('${dateStr}')">${d}${dotHtml}</div>`;
+        html += `<div class="day-cell ${isToday ? 'today' : ''}" data-date="${dateStr}" onclick="selectDay('${dateStr}')">${d}${dotHtml}</div>`;
       }
 
       grid.innerHTML = html;
