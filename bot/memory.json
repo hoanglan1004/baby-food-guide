@@ -4,11 +4,11 @@
 
   "profile": {
     "babyName": "하윤이",
-    "birthday": "2025-10-06",
-    "startDate": "2026-03-29",
+    "birthday": "2025-10-13",
+    "startDate": null,
     "parentName": "홍란",
     "parentTelegramId": "7986202795",
-    "notes": "첫째 아기. 부모 모두 이유식 처음."
+    "notes": "첫째 아기. 부모 모두 이유식 처음. 아직 이유식 시작 전 (6개월부터 시작 예정)."
   },
 
   "growth": {
@@ -20,28 +20,11 @@
       "neutral": []
     },
     "milestones": [],
-    "currentWeek": 1
+    "currentWeek": 0
   },
 
   "recommendations": {
-    "history": [
-      {
-        "date": "2026-03-29",
-        "week": 1,
-        "day": 1,
-        "plan": "initial_w1",
-        "meal": "쌀미음 1숟가락",
-        "reaction": null
-      },
-      {
-        "date": "2026-03-30",
-        "week": 1,
-        "day": 2,
-        "plan": "initial_w1",
-        "meal": "쌀미음 1~2숟가락",
-        "reaction": null
-      }
-    ],
+    "history": [],
     "patterns": {
       "bestMealTime": null,
       "prefersWarm": null,
