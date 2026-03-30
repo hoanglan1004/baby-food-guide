@@ -3,7 +3,7 @@
  * 네트워크 우선, 오프라인 시 캐시 사용
  */
 
-const CACHE_NAME = 'babyfood-v5';
+const CACHE_NAME = 'babyfood-v6';
 const CACHE_FILES = [
   './',
   './recipes.html',
