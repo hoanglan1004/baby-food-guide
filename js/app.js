@@ -167,7 +167,39 @@ const Journal = {
     if (s.journal[dateStr].meals.length === 0) {
       delete s.journal[dateStr];
     }
+
+    // triedIngredients 재계산
+    this._recalcTriedIngredient(s, ingredientId);
+
     App.saveSettings(s);
+  },
+
+  /** 삭제 후 특정 식재료의 시도 현황을 남은 일지에서 재계산 */
+  _recalcTriedIngredient(settings, ingredientId) {
+    if (!settings.triedIngredients) return;
+
+    // 남은 일지에서 해당 식재료 기록을 날짜순으로 수집
+    const entries = [];
+    const journal = settings.journal || {};
+    Object.keys(journal).sort().forEach(date => {
+      const day = journal[date];
+      if (!day.meals) return;
+      day.meals.forEach(m => {
+        if (m.ingredient === ingredientId) {
+          entries.push({ date, reaction: m.reaction });
+        }
+      });
+    });
+
+    if (entries.length === 0) {
+      // 기록이 하나도 없으면 식재료 현황에서 제거
+      delete settings.triedIngredients[ingredientId];
+    } else {
+      // 가장 최근 기록의 reaction으로 업데이트
+      const latest = entries[entries.length - 1];
+      settings.triedIngredients[ingredientId].tryCount = entries.length;
+      settings.triedIngredients[ingredientId].lastReaction = latest.reaction;
+    }
   },
 
   /** 식재료 시도 현황 */
