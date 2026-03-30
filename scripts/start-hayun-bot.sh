@@ -1,7 +1,7 @@
 #!/bin/bash
 # 하윤이 AI 영양사 — 상주 세션 시작 (tmux 진입점)
 
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$HOME/.cargo/bin"
+export PATH="$HOME/.bun/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin:$HOME/.cargo/bin"
 
 SESSION_NAME="hayun-bot"
 PROJECT_DIR="/Users/yoonminho/baby-food-guide"
