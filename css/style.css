@@ -430,6 +430,17 @@ a { color: var(--primary-dark); text-decoration: none; }
   font-weight: 700;
 }
 
+.calendar-grid .day-cell.selected {
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255, 154, 118, 0.4);
+}
+
+.calendar-grid .day-cell.selected .dot {
+  border: 1.5px solid #fff;
+}
+
 .calendar-grid .day-cell .dot {
   width: 6px;
   height: 6px;
