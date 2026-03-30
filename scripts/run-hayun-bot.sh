@@ -2,14 +2,19 @@
 # 하윤이 AI 영양사 — claude 실행 루프 (tmux 내부에서 실행됨)
 #
 # 텔레그램: @hayoon20151013_bot (하윤이 AI 이유식 전문 영양사)
+#
+# 핵심: bot/workspace/ 에서 실행하여 bkit 오버헤드 제거
+# bkit이 있는 baby-food-guide/ 에서 실행하면 시스템 프롬프트만 160k+ 소모
+# workspace에는 경량 CLAUDE.md만 있어 컨텍스트를 대화에 집중
 
 PROJECT_DIR="/Users/yoonminho/baby-food-guide"
+BOT_WORKSPACE="$PROJECT_DIR/bot/workspace"
 LOG_FILE="$PROJECT_DIR/data/hayun-bot-session.log"
 
 # 하윤 영양사 전용 텔레그램 채널 (CIO와 독립)
 export TELEGRAM_STATE_DIR="$HOME/.claude/channels/telegram-hayun"
 
-cd "$PROJECT_DIR"
+cd "$BOT_WORKSPACE"
 mkdir -p "$PROJECT_DIR/data"
 
 log() {
@@ -17,11 +22,10 @@ log() {
 }
 
 while true; do
-    log "하윤 영양사 봇 세션 시작"
+    log "하윤 영양사 봇 세션 시작 (workspace: $BOT_WORKSPACE)"
 
     claude --model sonnet \
            --name hayun-bot \
-           --effort high \
            --channels plugin:telegram@claude-plugins-official \
            --dangerously-skip-permissions
 
