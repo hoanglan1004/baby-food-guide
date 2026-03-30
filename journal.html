@@ -236,11 +236,9 @@
     function selectDay(dateStr) {
       selectedDate = dateStr;
       // 달력에서 선택된 날짜 강조
-      document.querySelectorAll('.calendar-grid .day-cell').forEach(cell => cell.classList.remove('selected'));
-      const cells = document.querySelectorAll('.calendar-grid .day-cell');
-      cells.forEach(cell => {
-        if (cell.getAttribute('onclick') === `selectDay('${dateStr}')`) cell.classList.add('selected');
-      });
+      document.querySelectorAll('.calendar-grid .day-cell.selected').forEach(cell => cell.classList.remove('selected'));
+      const target = document.querySelector(`.calendar-grid .day-cell[data-date="${dateStr}"]`);
+      if (target) target.classList.add('selected');
 
       const titleEl = document.getElementById('day-detail-title');
       const contentEl = document.getElementById('day-detail-content');
