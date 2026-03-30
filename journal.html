@@ -69,9 +69,13 @@
           <!-- 식재료 선택 -->
           <div class="form-group">
             <label>식재료 선택</label>
-            <input type="text" id="ing-search" placeholder="식재료 이름 검색..." oninput="filterIngredients()" autocomplete="off" style="margin-bottom:8px;">
-            <div id="ing-list" style="max-height:180px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg);"></div>
-            <div id="ing-selected" style="margin-top:8px; display:none; padding:10px 14px; background:var(--primary-light); border-radius:var(--radius-sm); font-weight:600; display:none;">
+            <div id="ing-selected" style="margin-top:4px; margin-bottom:8px; display:none; padding:10px 14px; background:var(--primary-light); border-radius:var(--radius-sm); font-weight:600;">
+              <span id="ing-selected-text"></span>
+              <button onclick="clearIngredient()" style="float:right; border:none; background:none; font-size:1rem; cursor:pointer;">✕</button>
+            </div>
+            <div id="ing-picker" style="margin-bottom:8px;">
+              <div class="category-filter" id="cat-filter"></div>
+              <div id="ing-list" style="max-height:200px; overflow-y:auto;"></div>
             </div>
           </div>
 
