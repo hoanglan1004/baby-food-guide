@@ -19,7 +19,8 @@ log() {
 while true; do
     log "하윤 영양사 봇 세션 시작"
 
-    claude --name hayun-bot \
+    claude --model sonnet \
+           --name hayun-bot \
            --effort high \
            --channels plugin:telegram@claude-plugins-official \
            --dangerously-skip-permissions
