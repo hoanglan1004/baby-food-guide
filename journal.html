@@ -259,15 +259,23 @@
     }
 
     // ─── 기록 추가 폼 ───
+    const CAT_LABELS = {
+      all: '전체', grain: '🌾 곡류', vegetable: '🥬 채소',
+      fruit: '🍎 과일', protein: '🥩 단백질', dairy: '🥛 유제품'
+    };
+    let currentCat = 'all';
+
     function openRecordForm() {
       selectedIngredient = null;
       selectedReaction = null;
-      document.getElementById('ing-search').value = '';
+      currentCat = 'all';
       document.getElementById('record-amount').value = '';
       document.getElementById('record-memo').value = '';
       document.getElementById('ing-selected').style.display = 'none';
+      document.getElementById('ing-picker').style.display = 'block';
       document.querySelectorAll('#reaction-btns .reaction-btn').forEach(b => b.classList.remove('selected'));
-      filterIngredients();
+      renderCategoryFilter();
+      renderIngredientList();
       document.getElementById('record-modal').style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
@@ -277,29 +285,43 @@
       document.body.style.overflow = '';
     }
 
-    function filterIngredients() {
-      const query = document.getElementById('ing-search').value.toLowerCase();
+    function renderCategoryFilter() {
+      const filterEl = document.getElementById('cat-filter');
+      filterEl.innerHTML = Object.entries(CAT_LABELS).map(([key, label]) =>
+        `<button class="filter-btn ${key === currentCat ? 'active' : ''}" onclick="switchCategory('${key}')">${label}</button>`
+      ).join('');
+    }
+
+    function switchCategory(cat) {
+      currentCat = cat;
+      renderCategoryFilter();
+      renderIngredientList();
+    }
+
+    function renderIngredientList() {
       const settings = App.getSettings();
       const monthAge = settings ? App.getMonthAge(settings.babyBirthday) : 6;
       const available = App.getAvailableIngredients(monthAge);
-
-      const filtered = query
-        ? available.filter(i => i.name.includes(query))
-        : available;
+      const filtered = currentCat === 'all'
+        ? available
+        : available.filter(i => i.category === currentCat);
 
       const listEl = document.getElementById('ing-list');
       if (filtered.length === 0) {
-        listEl.innerHTML = '<p style="padding:12px; font-size:0.85rem; color:var(--text-muted);">검색 결과 없음</p>';
+        listEl.innerHTML = '<p style="padding:12px; font-size:0.85rem; color:var(--text-muted);">이 카테고리에 식재료가 없어요</p>';
         return;
       }
 
-      listEl.innerHTML = filtered.map(i => `
-        <div onclick="pickIngredient('${i.id}')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--border); font-size:0.9rem; display:flex; align-items:center; gap:8px;">
-          <span>${i.emoji}</span>
-          <span>${i.name}</span>
-          <span style="margin-left:auto; font-size:0.75rem; color:var(--text-muted);">${i.category === 'grain' ? '곡류' : i.category === 'vegetable' ? '채소' : i.category === 'fruit' ? '과일' : i.category === 'protein' ? '단백질' : '유제품'}</span>
-        </div>
-      `).join('');
+      listEl.innerHTML = '<div style="display:flex; flex-wrap:wrap; gap:8px; padding:4px 0;">' +
+        filtered.map(i => {
+          const status = Journal.getTriedStatus(i.id);
+          const statusStyle = status === 'safe' ? 'border-color:var(--good);' :
+            status === 'trying' ? 'border-color:var(--okay);' :
+            status === 'allergy' ? 'border-color:var(--allergy);' : '';
+          return `<button onclick="pickIngredient('${i.id}')" style="padding:8px 14px; border:2px solid var(--border); border-radius:20px; background:var(--bg-card); font-size:0.88rem; cursor:pointer; ${statusStyle}">
+            ${i.emoji} ${i.name}
+          </button>`;
+        }).join('') + '</div>';
     }
 
     function pickIngredient(id) {
@@ -307,9 +329,8 @@
       if (!ing) return;
       selectedIngredient = ing;
       document.getElementById('ing-selected').style.display = 'block';
-      document.getElementById('ing-selected').textContent = `${ing.emoji} ${ing.name}`;
-      document.getElementById('ing-list').innerHTML = '';
-      document.getElementById('ing-search').value = '';
+      document.getElementById('ing-selected-text').textContent = `${ing.emoji} ${ing.name}`;
+      document.getElementById('ing-picker').style.display = 'none';
 
       // 현재 단계에 맞는 기본 양 표시
       const settings = App.getSettings();
@@ -318,6 +339,14 @@
       if (ing.stages && ing.stages[stage]) {
         document.getElementById('record-amount').placeholder = ing.stages[stage].amount;
       }
+    }
+
+    function clearIngredient() {
+      selectedIngredient = null;
+      document.getElementById('ing-selected').style.display = 'none';
+      document.getElementById('ing-picker').style.display = 'block';
+      document.getElementById('record-amount').placeholder = '예: 2숟가락, 50ml';
+      renderIngredientList();
     }
 
     function selectReaction(reaction) {
