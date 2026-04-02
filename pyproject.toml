@@ -1,0 +1,9 @@
+[project]
+name = "baby-food-guide"
+version = "0.1.0"
+description = "하윤이 이유식 가이드 PWA + 텔레그램 아침 브리핑"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
