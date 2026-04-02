@@ -1,9 +1,7 @@
 """하윤이 이유식 - 텔레그램 매일 아침 브리핑 스케줄러
 
-hayuni-play/scheduler.py 패턴을 그대로 따름:
-- 30초마다 시간 체크 → 정해진 시간에 브리핑 전송
-- tmux 세션(hayun-bot)으로 AI 브리핑 생성 (파일 기반 IPC)
-- 실패 시 claude -p 폴백 → 최종 폴백 정적 메시지
+매일 아침 7시에 claude -p로 AI 브리핑 생성 → 텔레그램 전송.
+claude -p가 WebSearch로 유튜브 레시피 영상을 직접 검색합니다.
 """
 
 import json
@@ -35,22 +33,9 @@ ALARM_MINUTE = int(os.getenv("ALARM_MINUTE", "0"))
 PROJECT_DIR = Path(__file__).parent
 MEMORY_FILE = PROJECT_DIR / "bot" / "memory.json"
 DATA_JS = PROJECT_DIR / "js" / "data.js"
-TMUX_SESSION = "hayun-bot"
 CLAUDE_BIN = "/opt/homebrew/bin/claude"
 
-# 브리핑 전용 IPC 파일 (봇 대화와 충돌 방지)
-BRIEFING_Q_FILE = PROJECT_DIR / ".briefing-question.txt"
-BRIEFING_A_FILE = PROJECT_DIR / ".briefing-answer.txt"
-
 WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
-
-
-def make_youtube_link(ingredient, months):
-    """식재료별 유튜브 검색 링크 생성"""
-    from urllib.parse import quote_plus
-
-    query = f"{months}개월 이유식 {ingredient} 레시피 만들기"
-    return f"https://www.youtube.com/results?search_query={quote_plus(query)}"
 
 
 def load_memory():
@@ -75,7 +60,6 @@ def get_month_age(today=None):
 
 def get_stage_and_week(months, total_days):
     """현재 단계와 주차 계산"""
-    # 이유식 시작일 = 생후 6개월 (약 180일)
     weaning_start_days = 180
     days_since_start = total_days - weaning_start_days
     if days_since_start < 0:
@@ -95,35 +79,8 @@ def get_stage_and_week(months, total_days):
     return stage, week
 
 
-def is_tmux_alive():
-    result = subprocess.run(
-        ["tmux", "has-session", "-t", TMUX_SESSION], capture_output=True
-    )
-    return result.returncode == 0
-
-
-def ask_claude_tmux(prompt, timeout_sec=300):
-    """tmux Claude Code 세션으로 AI 브리핑 생성"""
-    BRIEFING_A_FILE.write_text("", encoding="utf-8")
-    BRIEFING_Q_FILE.write_text(prompt, encoding="utf-8")
-
-    cmd = (
-        f"Read {BRIEFING_Q_FILE} 파일을 읽고 그 안의 지시대로 실행해. "
-        f"결과만 {BRIEFING_A_FILE}에 Write해."
-    )
-    subprocess.run(["tmux", "send-keys", "-t", TMUX_SESSION, cmd, "Enter"])
-
-    for _ in range(timeout_sec):
-        time.sleep(1)
-        if BRIEFING_A_FILE.exists():
-            answer = BRIEFING_A_FILE.read_text(encoding="utf-8").strip()
-            if answer and len(answer) > 20:
-                return answer
-    return None
-
-
-def ask_claude_pipe(prompt):
-    """claude -p 직접 호출 (tmux 폴백)"""
+def ask_claude(prompt):
+    """claude -p 호출 (WebSearch 등 모든 도구 사용 가능)"""
     env = os.environ.copy()
     env["DISABLE_AUTOUPDATER"] = "1"
     try:
@@ -132,8 +89,8 @@ def ask_claude_pipe(prompt):
             input=prompt,
             capture_output=True,
             text=True,
-            timeout=180,
-            cwd="/tmp",
+            timeout=300,
+            cwd=str(PROJECT_DIR),
             env=env,
         )
         if result.returncode == 0 and result.stdout.strip():
@@ -168,11 +125,6 @@ def build_ai_prompt(months, days, total_days, stage, week):
         last = history[-1]
         memory_hint += f"\n어제 추천: {last.get('recommended', '없음')}"
 
-    # 주요 초기 이유식 식재료별 유튜브 링크 미리 생성
-    ingredients = ["쌀미음", "애호박", "감자", "고구마", "당근", "브로콜리", "시금치", "소고기"]
-    yt_links = {ing: make_youtube_link(ing, months) for ing in ingredients}
-    yt_section = "\n".join(f"- {k}: {v}" for k, v in yt_links.items())
-
     return f"""하윤이 이유식 아침 브리핑을 만들어줘.
 
 기본 정보:
@@ -185,10 +137,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 1. Read {DATA_JS} 에서 WEEKLY_PLANS 확인
 2. {stage} {week}주차에 해당하는 주간 식단 찾기 (예: initial_w{min(week, 8)})
 3. 오늘 요일({weekday})에 맞는 식단 선택
-4. 아래 유튜브 링크 목록에서 해당 식재료 링크를 찾아서 포함
-
-유튜브 검색 링크 (이 중 오늘 식재료에 맞는 것을 사용):
-{yt_section}
+4. WebSearch로 "이유식 [오늘의 식재료] 레시피" 검색 → 유튜브 영상 URL 1개 찾기
 
 아래 형식으로 브리핑 작성 (plain text, 마크다운 없이):
 
@@ -204,7 +153,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 
 👩‍🍳 요리법
 [3-4줄 간단 조리법]
-📺 참고: [위 유튜브 링크 중 해당 식재료 링크를 그대로 넣기]
+📺 참고: [WebSearch로 찾은 실제 유튜브 영상 URL]
 
 💡 팁
 [{months}개월 아기에게 맞는 실용적 팁 1개]
@@ -214,8 +163,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 
 주의사항:
 - 알레르기 기록이 있는 식재료는 절대 추천하지 마
-- 유튜브 링크는 위에 제공된 것을 반드시 그대로 사용 (변경/생략 금지)
-- WebSearch 사용하지 마
+- 유튜브 링크는 반드시 WebSearch로 검색해서 실제 영상 URL을 넣어
 - 톤은 따뜻하고 실용적으로
 - 출력은 위 형식만 (설명이나 주석 추가 금지)
 """
@@ -282,24 +230,10 @@ def build_message():
     stage, week = get_stage_and_week(months, total_days)
     log(f"하윤이 {months}개월 {days}일, {stage} {week}주차")
 
-    # AI 브리핑 시도
     prompt = build_ai_prompt(months, days, total_days, stage, week)
-    answer = None
+    log("claude -p로 AI 브리핑 생성 중...")
 
-    if is_tmux_alive():
-        log("tmux 세션으로 AI 브리핑 생성 시도...")
-        try:
-            answer = ask_claude_tmux(prompt)
-        except Exception as e:
-            log(f"tmux 에러: {e}\n{traceback.format_exc()}")
-
-    if not answer:
-        log("claude -p 폴백 시도...")
-        try:
-            answer = ask_claude_pipe(prompt)
-        except Exception as e:
-            log(f"claude -p 에러: {e}\n{traceback.format_exc()}")
-
+    answer = ask_claude(prompt)
     if answer:
         log(f"AI 브리핑 완성 ({len(answer)}자)")
         return answer
