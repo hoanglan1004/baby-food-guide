@@ -45,6 +45,14 @@ BRIEFING_A_FILE = PROJECT_DIR / ".briefing-answer.txt"
 WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 
 
+def make_youtube_link(ingredient, months):
+    """식재료별 유튜브 검색 링크 생성"""
+    from urllib.parse import quote_plus
+
+    query = f"{months}개월 이유식 {ingredient} 레시피 만들기"
+    return f"https://www.youtube.com/results?search_query={quote_plus(query)}"
+
+
 def load_memory():
     if MEMORY_FILE.exists():
         return json.loads(MEMORY_FILE.read_text(encoding="utf-8"))
