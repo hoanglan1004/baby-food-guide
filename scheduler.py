@@ -163,7 +163,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 
 주의사항:
 - 알레르기 기록이 있는 식재료는 절대 추천하지 마
-- 유튜브 링크는 반드시 WebSearch로 검색해서 실제 영상 URL을 넣어
+- 유튜브 링크는 WebSearch로 실제 영상 URL을 찾아 넣어. 못 찾으면 반드시 https://www.youtube.com/results?search_query= 형태의 검색 링크라도 포함해. 링크 없이 보내지 마
 - 톤은 따뜻하고 실용적으로
 - 출력은 위 형식만 (설명이나 주석 추가 금지)
 """
