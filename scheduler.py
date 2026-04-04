@@ -39,6 +39,33 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
 WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 
 
+def search_youtube(query, max_results=1):
+    """YouTube Data API v3로 실제 영상 검색 → (title, url) 반환"""
+    if not YOUTUBE_API_KEY:
+        return None
+    try:
+        resp = requests.get(
+            "https://www.googleapis.com/youtube/v3/search",
+            params={
+                "part": "snippet",
+                "q": query,
+                "type": "video",
+                "maxResults": max_results,
+                "key": YOUTUBE_API_KEY,
+            },
+            timeout=10,
+        )
+        if resp.status_code == 200:
+            items = resp.json().get("items", [])
+            if items:
+                vid = items[0]["id"]["videoId"]
+                title = items[0]["snippet"]["title"]
+                return title, f"https://youtu.be/{vid}"
+    except Exception as e:
+        log(f"YouTube API 실패: {e}")
+    return None
+
+
 def load_memory():
     if MEMORY_FILE.exists():
         return json.loads(MEMORY_FILE.read_text(encoding="utf-8"))
