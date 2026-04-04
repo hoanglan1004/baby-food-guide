@@ -137,7 +137,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 1. Read {DATA_JS} 에서 WEEKLY_PLANS 확인
 2. {stage} {week}주차에 해당하는 주간 식단 찾기 (예: initial_w{min(week, 8)})
 3. 오늘 요일({weekday})에 맞는 식단 선택
-4. WebSearch로 "이유식 [오늘의 식재료] 레시피" 검색 → 유튜브 영상 URL 1개 찾기
+4. WebSearch로 "이유식 [오늘의 식재료] 레시피 site:youtube.com" 검색 → 유튜브 영상 URL 찾기. 못 찾으면 https://www.youtube.com/results?search_query=이유식+[식재료]+레시피 형태로 검색 링크 생성
 
 아래 형식으로 브리핑 작성 (plain text, 마크다운 없이):
 
