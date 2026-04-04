@@ -153,6 +153,18 @@ def build_ai_prompt(months, days, total_days, stage, week):
         last = history[-1]
         memory_hint += f"\n어제 추천: {last.get('recommended', '없음')}"
 
+    # YouTube API로 이유식 영상 미리 검색
+    yt_query = f"이유식 {stage} {week}주차 레시피 만들기"
+    yt_result = search_youtube(yt_query)
+    if yt_result:
+        yt_title, yt_url = yt_result
+        yt_line = f"📺 참고: {yt_url}"
+    else:
+        from urllib.parse import quote_plus
+
+        yt_url = f"https://www.youtube.com/results?search_query={quote_plus(yt_query)}"
+        yt_line = f"📺 참고: {yt_url}"
+
     return f"""하윤이 이유식 아침 브리핑을 만들어줘.
 
 기본 정보:
@@ -161,12 +173,14 @@ def build_ai_prompt(months, days, total_days, stage, week):
 - 이유식 {week}주차
 - 날짜: {date_str} ({weekday}){memory_hint}
 
+유튜브 영상 (YouTube API로 검색 완료 — 그대로 사용할 것):
+{yt_line}
+
 실행 순서:
 1. Read {DATA_JS} 에서 WEEKLY_PLANS 확인
 2. {stage} {week}주차에 해당하는 주간 식단 찾기 (예: initial_w{min(week, 8)})
 3. 오늘 요일({weekday})에 맞는 식단 선택
-4. 유튜브 링크: WebSearch 사용하지 마. 아래처럼 검색 링크를 직접 만들어:
-   https://www.youtube.com/results?search_query=이유식+[식재료]+레시피+만들기
+4. 식단이 결정되면 YouTube API로 찾은 더 구체적인 영상도 추가 검색 가능
 
 아래 형식으로 브리핑 작성 (plain text, 마크다운 없이):
 
@@ -182,7 +196,7 @@ def build_ai_prompt(months, days, total_days, stage, week):
 
 👩‍🍳 요리법
 [3-4줄 간단 조리법]
-📺 참고: [WebSearch로 찾은 실제 유튜브 영상 URL]
+{yt_line}
 
 💡 팁
 [{months}개월 아기에게 맞는 실용적 팁 1개]
@@ -192,7 +206,8 @@ def build_ai_prompt(months, days, total_days, stage, week):
 
 주의사항:
 - 알레르기 기록이 있는 식재료는 절대 추천하지 마
-- 유튜브 링크는 WebSearch로 실제 영상 URL을 찾아 넣어. 못 찾으면 반드시 https://www.youtube.com/results?search_query= 형태의 검색 링크라도 포함해. 링크 없이 보내지 마
+- 유튜브 영상 URL은 위에 제공된 것을 그대로 사용해. WebSearch로 다른 링크를 찾지 마
+- 식단이 결정된 후 그 식재료에 맞는 영상이 필요하면 위 URL을 그대로 쓸 것
 - 톤은 따뜻하고 실용적으로
 - 출력은 위 형식만 (설명이나 주석 추가 금지)
 """
