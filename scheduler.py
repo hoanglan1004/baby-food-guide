@@ -34,6 +34,7 @@ PROJECT_DIR = Path(__file__).parent
 MEMORY_FILE = PROJECT_DIR / "bot" / "memory.json"
 DATA_JS = PROJECT_DIR / "js" / "data.js"
 CLAUDE_BIN = "/opt/homebrew/bin/claude"
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
 
 WEEKDAYS_KR = ["월", "화", "수", "목", "금", "토", "일"]
 
