@@ -266,8 +266,8 @@ def build_message():
     """아침 브리핑 메시지 생성 (AI 우선, 정적 폴백)"""
     months, days, total_days = get_month_age()
 
-    # 6개월 미만: 시작 전 메시지
-    if months < 6:
+    # 180일 미만: 시작 전 메시지 (달력 6개월 아닌 WHO 기준 180일 사용)
+    if total_days < 180:
         log(f"하윤이 {months}개월 {days}일 — 이유식 시작 전")
         return build_pre_weaning_message(months, days, total_days)
 
