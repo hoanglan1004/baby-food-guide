@@ -299,10 +299,42 @@ def send_telegram(text):
     return resp
 
 
+def save_briefing_to_file(msg: str) -> None:
+    """브리핑 텍스트를 `briefings/YYYY-MM-DD.json`에 저장.
+
+    iOS 홍란 브레인 앱이 `/baby-food/briefing/today` 엔드포인트로 읽음.
+    홍란님이 더 이상 PWA에 안 들어가도 앱에서 이 브리핑을 바로 볼 수 있게.
+    """
+    today = date.today().isoformat()
+    out_dir = PROJECT_DIR / "briefings"
+    out_dir.mkdir(exist_ok=True)
+    out_file = out_dir / f"{today}.json"
+    out_file.write_text(
+        json.dumps(
+            {
+                "date": today,
+                "generated_at": datetime.now().isoformat(),
+                "source": "baby-food-guide",
+                "text": msg,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    log(f"브리핑 파일 저장: {out_file}")
+
+
 def run_once():
     """한 번 실행"""
     try:
         msg = build_message()
+        # iOS 앱이 읽을 수 있도록 파일로도 저장 (텔레그램 전송 전에 저장해
+        # 전송 실패해도 앱에서는 볼 수 있게).
+        try:
+            save_briefing_to_file(msg)
+        except Exception as e:
+            log(f"브리핑 파일 저장 실패 (계속 진행): {e}")
         send_telegram(msg)
     except Exception as e:
         log(f"run_once 실패: {e}\n{traceback.format_exc()}")
