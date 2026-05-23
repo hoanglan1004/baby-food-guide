@@ -31,7 +31,7 @@ load_dotenv(
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-DISCORD_TARGET_ID = "1494348549599531192"  # 홍란님 디스코드 (채널 또는 사용자 ID)
+DISCORD_TARGET_ID = "1460140137869742211"  # 민호님 디스코드 DM (검증된 ID)
 DISCORD_API = "https://discord.com/api/v10"
 BABY_BIRTHDAY = date.fromisoformat(os.getenv("BABY_BIRTHDAY", "2025-10-13"))
 ALARM_HOUR = int(os.getenv("ALARM_HOUR", "7"))
