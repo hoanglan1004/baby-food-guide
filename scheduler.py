@@ -23,9 +23,9 @@ def log(msg):
 
 
 load_dotenv(Path(__file__).parent / ".env")
-# 디스코드 봇 토큰 (discord-hayuni 채널 봇 — 홍란님 서버 접근 권한 있음)
+# 디스코드 봇 토큰 (discord-hajun 봇 — 민호님과 mutual guild 보장: retrieval_quiz 검증됨)
 load_dotenv(
-    Path.home() / ".claude" / "channels" / "discord-hayuni" / ".env", override=False
+    Path.home() / ".claude" / "channels" / "discord-hajun" / ".env", override=False
 )
 
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
