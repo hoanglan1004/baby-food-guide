@@ -328,7 +328,7 @@ def send_discord(text: str) -> None:
             log("디스코드 채널 전송 성공")
             return
         # 채널 아님 → 사용자 ID로 간주하고 DM 채널 생성
-        if r.status_code in (400, 404):
+        if r.status_code in (400, 403, 404):
             dm = requests.post(
                 f"{DISCORD_API}/users/@me/channels",
                 headers=headers,
