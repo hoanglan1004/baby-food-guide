@@ -390,6 +390,7 @@ def run_once():
         except Exception as e:
             log(f"브리핑 파일 저장 실패 (계속 진행): {e}")
         send_telegram(msg)
+        send_discord(msg)
     except Exception as e:
         log(f"run_once 실패: {e}\n{traceback.format_exc()}")
         try:
