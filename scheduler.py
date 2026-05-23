@@ -294,16 +294,63 @@ def build_message():
 
 
 def send_telegram(text):
-    """텔레그램 메시지 전송"""
+    """텔레그램 메시지 전송 (민호님)"""
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": text}
 
     resp = requests.post(url, json=payload, timeout=10)
     if resp.status_code == 200:
-        log("알림 전송 성공")
+        log("텔레그램 전송 성공")
     else:
-        log(f"전송 실패: {resp.status_code} {resp.text}")
+        log(f"텔레그램 전송 실패: {resp.status_code} {resp.text}")
     return resp
+
+
+def send_discord(text: str) -> None:
+    """디스코드 전송 (홍란님). 채널 ID로 먼저 시도, 실패하면 사용자 DM으로 폴백."""
+    if not DISCORD_BOT_TOKEN:
+        log("DISCORD_BOT_TOKEN 없음 — 디스코드 전송 건너뜀")
+        return
+    headers = {
+        "Authorization": f"Bot {DISCORD_BOT_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    # Discord 메시지 길이 2000자 제한
+    payload = {"content": text[:2000]}
+    try:
+        r = requests.post(
+            f"{DISCORD_API}/channels/{DISCORD_TARGET_ID}/messages",
+            headers=headers,
+            json=payload,
+            timeout=10,
+        )
+        if r.status_code in (200, 201):
+            log("디스코드 채널 전송 성공")
+            return
+        # 채널 아님 → 사용자 ID로 간주하고 DM 채널 생성
+        if r.status_code in (400, 404):
+            dm = requests.post(
+                f"{DISCORD_API}/users/@me/channels",
+                headers=headers,
+                json={"recipient_id": DISCORD_TARGET_ID},
+                timeout=10,
+            )
+            if dm.status_code in (200, 201):
+                ch_id = dm.json()["id"]
+                r2 = requests.post(
+                    f"{DISCORD_API}/channels/{ch_id}/messages",
+                    headers=headers,
+                    json=payload,
+                    timeout=10,
+                )
+                if r2.status_code in (200, 201):
+                    log("디스코드 DM 전송 성공")
+                    return
+                log(f"디스코드 DM 전송 실패: {r2.status_code} {r2.text[:200]}")
+                return
+        log(f"디스코드 전송 실패: {r.status_code} {r.text[:200]}")
+    except Exception as e:
+        log(f"디스코드 전송 예외: {e}")
 
 
 def save_briefing_to_file(msg: str) -> None:
