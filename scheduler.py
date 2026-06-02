@@ -120,9 +120,9 @@ def ask_claude(prompt):
     env = os.environ.copy()
     env["DISABLE_AUTOUPDATER"] = "1"
     try:
+        # agy의 -p는 프롬프트가 바로 뒤에 와야 정상 동작(끝 인자 순서 이슈 회피)
         result = subprocess.run(
-            [CLAUDE_BIN, "-p", "--model", "sonnet", "--dangerously-skip-permissions"],
-            input=prompt,
+            [AGY_BIN, "-p", prompt, "--dangerously-skip-permissions"],
             capture_output=True,
             text=True,
             timeout=300,
